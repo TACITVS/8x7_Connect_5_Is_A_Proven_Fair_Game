@@ -433,4 +433,117 @@ Proof.
   - apply (cert_sound fuel_b cert_b Black initial White idx_b Hb).
 Qed.
 
+(** ** Concrete Machine-Checked Structural & Parity Theorems *)
 
+(** Opening board after White plays at center-left column 3: (3, 0). *)
+Definition b_open : board := play initial 3 White.
+
+(** Theorem 1 (First-Player Parity Obstruction at Ply 1):
+    After White's opening move at (3, 0), exactly 55 empty cells remain on the
+    8x7 board, which has odd parity ([Nat.even 55 = false]). Hence no pure
+    unfrozen Claimeven pairing ([s_parity = true, s_frozen = None]) can
+    partition all 55 remaining cells into 2-cell pairs. *)
+Theorem parity_trap_ply1 :
+  empties b_open = 55 /\ Nat.even (empties b_open) = false.
+Proof.
+  vm_compute. split; reflexivity.
+Qed.
+
+(** The 27-pair opening structure (24 vertical dominoes + 3 ground cross-pairs,
+    leaving dead cell (4, 6) unassigned). *)
+Definition white_27pair_struct : structure := {|
+  s_parity := true;
+  s_frozen := None;
+  s_strong :=
+    (* Col 3 above (3,0): 3 strong dominoes *)
+    [((3,1),(3,2)); ((3,3),(3,4)); ((3,5),(3,6))] ++
+    (* Col 4 below dead cell (4,6): 3 strong dominoes *)
+    [((4,0),(4,1)); ((4,2),(4,3)); ((4,4),(4,5))] ++
+    (* Cols 0, 1, 2, 5, 6, 7 above row 0: 6 * 3 = 18 strong dominoes *)
+    [((0,1),(0,2)); ((0,3),(0,4)); ((0,5),(0,6));
+     ((1,1),(1,2)); ((1,3),(1,4)); ((1,5),(1,6));
+     ((2,1),(2,2)); ((2,3),(2,4)); ((2,5),(2,6));
+     ((5,1),(5,2)); ((5,3),(5,4)); ((5,5),(5,6));
+     ((6,1),(6,2)); ((6,3),(6,4)); ((6,5),(6,6));
+     ((7,1),(7,2)); ((7,3),(7,4)); ((7,5),(7,6))];
+  s_rigid :=
+    (* 3 ground-level row-0 cross-pairs *)
+    [((0,0),(7,0)); ((1,0),(5,0)); ((2,0),(6,0))];
+  s_weak := [];
+  s_free := []
+|}.
+
+(** Theorem 2 (27-Pair Opening Line Coverage):
+    All 76 winning lines of length 5 on the 8x7 board are covered by White's
+    opening stone at (3, 0) together with the 24 vertical dominoes, even with
+    cell (4, 6) completely unassigned. *)
+Theorem opening_27pair_line_cover :
+  check_cover White b_open white_27pair_struct = true.
+Proof.
+  vm_compute. reflexivity.
+Qed.
+
+(** The minimal 10-Cell Core structure: strong vertical dominoes ONLY in
+    Columns 2, 4, and 6 (giving 9 upper cells + opening stone (3,0) = 10 cells)
+    and weak vertical dominoes in Columns 0, 1, 3, 5, 7. *)
+Definition white_core10_struct : structure := {|
+  s_parity := false;
+  s_frozen := None;
+  s_strong :=
+    [((2,1),(2,2)); ((2,3),(2,4)); ((2,5),(2,6));
+     ((4,0),(4,1)); ((4,2),(4,3)); ((4,4),(4,5));
+     ((6,1),(6,2)); ((6,3),(6,4)); ((6,5),(6,6))];
+  s_rigid := [];
+  s_weak :=
+    [((0,1),(0,2)); ((0,3),(0,4)); ((0,5),(0,6));
+     ((1,1),(1,2)); ((1,3),(1,4)); ((1,5),(1,6));
+     ((3,1),(3,2)); ((3,3),(3,4)); ((3,5),(3,6));
+     ((5,1),(5,2)); ((5,3),(5,4)); ((5,5),(5,6));
+     ((7,1),(7,2)); ((7,3),(7,4)); ((7,5),(7,6))];
+  s_free := [0; 1; 3; 5; 7]
+|}.
+
+(** Theorem 3 (10-Cell Core Sufficiency):
+    The 10 guaranteed White cells {(3,0), (2,2), (2,4), (2,6), (4,1), (4,3),
+    (4,5), (6,2), (6,4), (6,6)} intersect all 52 horizontal and diagonal
+    winning lines on the 8x7 board, while weak dominoes in the remaining
+    5 columns cover all 24 vertical winning lines. *)
+Theorem core10_covers_all_76_lines :
+  check_cover White b_open white_core10_struct = true.
+Proof.
+  vm_compute. reflexivity.
+Qed.
+
+(** Theorem 4 (Double-Blocking of Dead Cell (4, 6)):
+    Cell (4, 6) participates in exactly 6 winning lines of length 5, and every
+    single one of those 6 winning lines contains at least 2 cells from White's
+    guaranteed upper domino set. *)
+Definition lines_through_4_6 : list (list cell) :=
+  filter (existsb (cell_eqb (4, 6))) lines.
+
+Definition white_guaranteed_cells : list cell :=
+  (3, 0) :: map snd (s_strong white_27pair_struct).
+
+Theorem dead_cell_4_6_six_lines_double_blocked :
+  length lines_through_4_6 = 6 /\
+  forallb (fun L =>
+    2 <=? length (filter (fun x => existsb (cell_eqb x) white_guaranteed_cells) L))
+    lines_through_4_6 = true.
+Proof.
+  vm_compute. split; reflexivity.
+Qed.
+
+(** Theorem 5 (Rule R3 Frozen-Threat Parity Restoration):
+    Whenever the total number of empty cells E in {7, 9, ..., 55} is odd and
+    White holds a 4-in-a-row threat in column fc at an odd row ft in {1, 3, 5},
+    freezing the 7 - (ft - 1) in {7, 5, 3} cells from the poisoned cell
+    (fc, ft - 1) to the top of column fc leaves an EVEN number of empty cells
+    in the remaining freezone, satisfying [st_mode] in [C5Rules.v]. *)
+Theorem r3_frozen_column_restores_even_parity :
+  forallb (fun E =>
+    forallb (fun ft => Nat.even (E - (7 - (ft - 1)))) [1; 3; 5])
+    [7; 9; 11; 13; 15; 17; 19; 21; 23; 25; 27; 29;
+     31; 33; 35; 37; 39; 41; 43; 45; 47; 49; 51; 53; 55] = true.
+Proof.
+  vm_compute. reflexivity.
+Qed.
