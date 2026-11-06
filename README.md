@@ -29,15 +29,22 @@
 </p>
 
 > [!TIP]
-> ### 📖 NEW — Follow-Up Paper II: How Would David Hilbert & Paul Erdős Prove 8×7 Connect-5 Fairness on a Single Napkin? (Formalized in Lean 4.35.0 + Common Lisp / ACL2 Audit)
-> Suppose you had **no computer, no GPU, and no `vm_compute`**—how would **David Hilbert**, **Ernst Zermelo**, and **Paul Erdős** write a human-surveyable pen-and-paper proof of our theorems? And how does **untyped Common Lisp** (via **Boyer–Moore's ACL2** and **homoiconic macro/LCF kernels**) achieve the same mathematical certainty as **Rocq 9.1** and **Lean 4**?
-> - **Zero-Enumeration 12-Line Analytic Proof of the 10-Cell Core (`core10_covers_all_76_lines` / `erdos_10cell_transversal_hand_proof`):** Proves via the **Pigeonhole Principle** on 5-column spans and **Modulo-2 Parity** (`r(c_even) = r(4) ± 2s ≡ r(4) (mod 2)`) that our 10-cell transversal blocks all 52 horizontal and diagonal winning lines without inspecting a single line by computer!
-> - **100% Constructive Formalization in Lean 4.35.0:** All **12 analytic hand-proof theorems** are formalized over affine line equations on `ℤ` in [**`lean4/Connect5HandProof.lean`**](lean4/Connect5HandProof.lean) with **0 `sorry`s, 0 custom axioms, and 0 uses of `Classical.choice`**!
-> - **Read Follow-Up Paper II & Inspect the Lean 4 Formalization:**
->   - 📘 **Interactive Markdown Edition:** [**`HILBERT_ERDOS_PEN_AND_PAPER_PROOF.md`**](HILBERT_ERDOS_PEN_AND_PAPER_PROOF.md)
->   - 💎 **Lean 4.35.0 Analytic Hand Proof:** [**`lean4/Connect5HandProof.lean`**](lean4/Connect5HandProof.lean)
->   - 📕 **AMS Journal PDF (Single-Column):** [**`paper/connect5_8x7_hilbert_erdos_AMS.pdf`**](paper/connect5_8x7_hilbert_erdos_AMS.pdf)
->   - 📗 **ACS Two-Column PDF:** [**`paper/connect5_8x7_hilbert_erdos_ACS.pdf`**](paper/connect5_8x7_hilbert_erdos_ACS.pdf)
+> ### 💎 NEW — Follow-Up Paper II & Lean 4.35.0 Formalization: How Would David Hilbert & Paul Erdős Prove 8×7 Connect-5 Fairness on a Single Napkin?
+> Suppose you had **no computer, no GPU, and no `vm_compute` list enumeration**—how would **David Hilbert**, **Ernst Zermelo**, and **Paul Erdős** write a human-surveyable pen-and-paper proof of our theorems? And how does **Lean 4.35.0** or **untyped Common Lisp (`ACL2` & homoiconic macros)** verify it?
+> - **Zero-Enumeration 12-Line Analytic Proof of the 10-Cell Core (`erdos_10cell_transversal_hand_proof`):** Proves via the **Pigeonhole Principle** on 5-column spans and **Modulo-2 Parity** (`r(c_even) = r(4) ± 2s ≡ r(4) (mod 2)`) that our 10-cell transversal blocks all 52 horizontal and diagonal winning lines without inspecting a single line by computer!
+> - **100% Constructive Formalization in Lean 4.35.0 (`lean4/Connect5HandProof.lean`):** All **12 analytic hand-proof theorems** are proved over affine line equations on `ℤ` in **Lean 4.35.0** with **ZERO `sorry`s, ZERO custom axioms, and ZERO uses of `Classical.choice`**!
+> <div align="center">
+>   <h3>
+>     <a href="HILBERT_ERDOS_PEN_AND_PAPER_PROOF.md">📘 Read Follow-Up Paper II (<code>HILBERT_ERDOS_PEN_AND_PAPER_PROOF.md</code>)</a>
+>     &nbsp;|&nbsp;
+>     <a href="lean4/Connect5HandProof.lean">💎 Inspect the Lean 4.35.0 Hand Proof (<code>lean4/Connect5HandProof.lean</code>) ➔</a>
+>   </h3>
+>   <p>
+>     <a href="paper/connect5_8x7_hilbert_erdos_AMS.pdf"><b>📕 Download Paper II (AMS PDF)</b></a>
+>     &nbsp;•&nbsp;
+>     <a href="paper/connect5_8x7_hilbert_erdos_ACS.pdf"><b>📗 Download Paper II (ACS Two-Column PDF)</b></a>
+>   </p>
+> </div>
 
 <p align="center">
   <a href="HILBERT_ERDOS_PEN_AND_PAPER_PROOF.md">
@@ -53,12 +60,13 @@
 3. [Architecture & Verification Pipeline](#-architecture--verification-pipeline)
 4. [The First-Player Parity Trap, 27-Pair Coverage & Rule R3](#-the-first-player-parity-trap-27-pair-coverage--rule-r3)
 5. [Formal Verification Structure & 12 Machine-Checked Theorems (Rocq 9.1)](#-formal-verification-structure--12-machine-checked-theorems-rocq-91)
-6. [Type-Theoretic Foundations: Rocq 9.1 (CIC) vs. Haskell vs. Common Lisp vs. Higher Type Theories](#-type-theoretic-foundations-rocq-91-cic-vs-haskell-vs-common-lisp-vs-higher-type-theories)
-7. [Massively Parallel GPU Solver & Benchmarks (Log Scale)](#-massively-parallel-gpu-solver--benchmarks-log-scale)
-8. [Academic Preprints — Paper I & Follow-Up Paper II (AMS & ACS Styles)](#-academic-preprints--paper-i--follow-up-paper-ii-ams--acs-styles)
-9. [Repository File Tree](#-repository-file-tree)
-10. [Reproduction & Build Instructions](#-reproduction--build-instructions)
-11. [Citation & License](#-citation--license)
+6. [Analytic Hand-Proof Formalization & 12 Constructive Theorems (Lean 4.35.0)](#-analytic-hand-proof-formalization--12-constructive-theorems-lean-4350)
+7. [Type-Theoretic Foundations: Rocq 9.1 (CIC) vs. Haskell vs. Common Lisp vs. Higher Type Theories](#-type-theoretic-foundations-rocq-91-cic-vs-haskell-vs-common-lisp-vs-higher-type-theories)
+8. [Massively Parallel GPU Solver & Benchmarks (Log Scale)](#-massively-parallel-gpu-solver--benchmarks-log-scale)
+9. [Academic Preprints — Paper I & Follow-Up Paper II (AMS & ACS Styles)](#-academic-preprints--paper-i--follow-up-paper-ii-ams--acs-styles)
+10. [Repository File Tree](#-repository-file-tree)
+11. [Reproduction & Build Instructions](#-reproduction--build-instructions)
+12. [Citation & License](#-citation--license)
 
 ---
 
@@ -93,13 +101,13 @@ A rigorous scientific boundary separates the **classical AI folklore** we inheri
 | **Bitboard Representation** | **John Tromp (1993/1995)** invented the **Fhourstones** 64-bit column-sentinel bitboard layout (`(mask + bottom) & board`) and 4-shift win detection. | **Exact 64-Bit Hardware Saturation on GPU (`c5_gpu_search.cu`).** Exploited `8 cols × (7 + 1 sentinel) = 64 bits` (zero wasted bits in `uint64_t`) across 4.19M CUDA threads at **405.35M evals/s**. | Verified in [`solver/c5_gpu_search.cu`](solver/c5_gpu_search.cu) |
 | **AND/OR Tree Search** | **Ayumu Nagai (1999, 2002)** invented Depth-First Proof-Number Search (`df-pn` / `MID`); **Kaneko (2010)** & **Pawlewicz (2013)** added `PDFPN` virtual loss. | Integrated our exact formalizable leaf rules (`R1` weak, `R2` Claimeven, `R3` frozen-threat Claimeven) directly into `MID` leaf evaluation in [`solver/rules.h`](solver/rules.h). | Verified in [`solver/pdfpn.c`](solver/pdfpn.c) & [`solver/rules.h`](solver/rules.h) |
 | **Computational Reflection** | **Georges Gonthier (2005, 2008)** established external search + verified `vm_compute` boolean checker in Coq for the Four Color Theorem. | Built the verified boolean decider `check_static` and DAG strategy evaluator `check_cert_node` for gravity `(m, n, k)` games, proving `check_static_sound`, `cert_sound`, and `cert_fair`. | Machine-checked in [`C5CertChecker.v`](C5CertChecker.v) |
-| **First-Player Parity & Combinatorial Core** | Classical *Claimeven* requires an even number of empty cells (`s_frozen = None`), which fails at Ply 1 (`56 - 1 = 55` odd empty cells). | **Proved 5 New Structural & Parity Theorems:** (1) `parity_trap_ply1`, (2) `opening_27pair_line_cover`, (3) `core10_covers_all_76_lines` (10 cells block all 52 non-vertical lines!), (4) `dead_cell_4_6_six_lines_double_blocked`, and (5) `r3_frozen_column_restores_even_parity`. | All 5 theorems machine-checked via `vm_compute` in [`C5CertChecker.v`](C5CertChecker.v) |
+| **First-Player Parity & Combinatorial Core** | Classical *Claimeven* requires an even number of empty cells (`s_frozen = None`), which fails at Ply 1 (`56 - 1 = 55` odd empty cells). | **Proved 5 New Structural & Parity Theorems (Rocq 9.1) + 12 Analytic Hand-Proof Theorems (Lean 4.35.0):** (1) `parity_trap_ply1`, (2) `opening_27pair_line_cover`, (3) `core10_covers_all_76_lines` / `erdos_10cell_transversal_hand_proof`, (4) `dead_cell_4_6_six_lines_double_blocked`, and (5) `r3_frozen_column_restores_even_parity`. | Verified in [`C5CertChecker.v`](C5CertChecker.v) & [`lean4/Connect5HandProof.lean`](lean4/Connect5HandProof.lean) |
 
 ---
 
 ## 🏛 Architecture & Verification Pipeline
 
-The formal proof bridges foundational constructive deductive reasoning in Rocq 9.1 with high-throughput GPU search synthesis:
+The formal proof bridges foundational constructive deductive reasoning in Rocq 9.1 and Lean 4.35.0 with high-throughput GPU search synthesis:
 
 <p align="center">
   <img src="assets/architecture_pipeline.svg" alt="Architecture &amp; Verification Pipeline" width="100%"/>
@@ -108,7 +116,7 @@ The formal proof bridges foundational constructive deductive reasoning in Rocq 9
 1. **Foundational Layer ([`C5Game.v`](C5Game.v), [`C5Board.v`](C5Board.v)):** Trusted operational semantics of the 8 × 7 board with gravity, column height constraints (0 ≤ r < 7, 0 ≤ c < 8), 76 winning 5-in-a-row lines, and inductive safety predicates.
 2. **Deductive Layer ([`C5Principle.v`](C5Principle.v), [`C5Rules.v`](C5Rules.v)):** Victor Allis's combinatorial pairing theory formalized for arbitrary boards. Proves that strong vertical dominoes, horizontal ground-row pairs, rigid chains, and Rule R3 frozen threats guarantee safety via well-founded induction on empty cells (`structure_sound`).
 3. **GPU Synthesis Layer ([`solver/c5_gpu_search.cu`](solver/c5_gpu_search.cu)):** CUDA kernel utilizing warp-level parallel bitboard manipulation (adapting Tromp's Fhourstones sentinel encoding to 64-bit GPU registers) to evaluate 405.35M positions/sec.
-4. **Computational Reflection ([`C5Certificate.v`](C5Certificate.v), [`C5CertChecker.v`](C5CertChecker.v)):** Verified boolean reflection checker executed via `vm_compute`, yielding absolute proof that `game_value = Draw`.
+4. **Computational Reflection & Analytic Hand Proof ([`C5Certificate.v`](C5Certificate.v), [`C5CertChecker.v`](C5CertChecker.v), [`lean4/Connect5HandProof.lean`](lean4/Connect5HandProof.lean)):** Verified boolean reflection checker executed via `vm_compute` in Rocq 9.1, paired with a zero-enumeration Presburger arithmetic (`omega`) formalization of the Hilbert–Erdős pen-and-paper proof in Lean 4.35.0.
 
 ---
 
@@ -181,6 +189,54 @@ Running `powershell -ExecutionPolicy Bypass -File .\build.ps1` compiles all 6 pr
 Compiling CheckAssumptions.v...
 Closed under the global context  (x12 — all 12 theorems verified with 0 axioms!)
  OK (1.68s)
+```
+
+---
+
+## 💎 Analytic Hand-Proof Formalization & 12 Constructive Theorems (Lean 4.35.0)
+
+In [`lean4/Connect5HandProof.lean`](lean4/Connect5HandProof.lean) (companion to **[Follow-Up Paper II](HILBERT_ERDOS_PEN_AND_PAPER_PROOF.md)**), we formalize the **Hilbert–Zermelo–Erdős pen-and-paper proof** in **Lean 4.35.0** (`leanprover/lean4:v4.35.0`).
+
+Whereas [`C5CertChecker.v`](C5CertChecker.v) in Rocq 9.1 verifies the 76 winning lines by enumerating `all_lines` and evaluating `check_cover` via `vm_compute`, our Lean 4 development states the theorems **analytically over affine line equations on `ℤ`** (`rowAt r4 s c = r4 + s * (c - 4)`) and proves them using the exact Pigeonhole and Modulo-2 Parity steps of a human pen-and-paper proof—with **zero `sorry`s, zero custom axioms, and zero uses of `Classical.choice`**!
+
+### All 12 Constructive Hand-Proof Theorems in [`lean4/Connect5HandProof.lean`](lean4/Connect5HandProof.lean)
+
+| # | Lean 4 Theorem Identifier | Corresponding Hand-Proof Step (Paper II) | `#print axioms` Output |
+| :-: | :--- | :--- | :---: |
+| **1** | [`ply1_parity_obstruction`](lean4/Connect5HandProof.lean#L63) | Proposition 2.1: `8*7 - 1 = 55`, `55 % 2 = 1`, and `∀ k : Nat, 2 * k ≠ 55` | `[propext, Quot.sound]` |
+| **2** | [`vertical_domino_transversal`](lean4/Connect5HandProof.lean#L82) | Lemma 1: Every 5-row vertical window `[r0, r0+4]` contains `{1,2}` or `{3,4}` | `[propext, Quot.sound]` |
+| **3** | [`pigeonhole_5col_window`](lean4/Connect5HandProof.lean#L114) | Step 1 (Pigeonhole): Every 5-col window `[c0, c0+4]` contains `3, 4` and `2` or `6` | `[propext, Quot.sound]` |
+| **4** | [`modulo2_parity_preservation`](lean4/Connect5HandProof.lean#L128) | Step 2A (Parity): `r4 % 2 = 0 → rowAt r4 s 2 % 2 = 0 ∧ rowAt r4 s 6 % 2 = 0` | `[propext, Quot.sound]` |
+| **5** | [`erdos_10cell_transversal_hand_proof`](lean4/Connect5HandProof.lean#L172) | **Theorem 1:** Every valid non-vertical 5-line `(c0, r4, s)` intersects `C₁₀` | `[propext, Quot.sound]` |
+| **6** | [`dead_cell_4_6_vertical_double_blocked`](lean4/Connect5HandProof.lean#L244) | Proposition 1A: Vertical line through `(4,6)` hits both `(4,3)` and `(4,5)` | **None (`0 axioms`)** |
+| **7** | [`dead_cell_4_6_nonvertical_double_blocked`](lean4/Connect5HandProof.lean#L254) | Proposition 1B: Every non-vertical line through `(4,6)` hits `≥ 2` cells of `U` | `[propext, Quot.sound]` |
+| **8** | [`r3_frozen_suffix_restores_even_parity`](lean4/Connect5HandProof.lean#L296) | **Theorem 2 (Rule R3):** `E % 2 = 1 ∧ ft % 2 = 1 → (E - (8 - ft)) % 2 = 0` | `[propext, Quot.sound]` |
+| **9** | [`zermelo_mutual_safety_draw`](lean4/Connect5HandProof.lean#L337) | Zermelo Equilibrium: `SafeOutcome White o ∧ SafeOutcome Black o → o = Draw` | `[propext]` |
+| **10** | [`allis_followup_induction`](lean4/Connect5HandProof.lean#L354) | Inductive Follow-Up Principle over remaining empty cells `E : Nat` | `[propext, Quot.sound]` |
+| **11** | [`horizontal_5col_pair_transversal`](lean4/Connect5HandProof.lean#L368) | Every 5-column horizontal window `[c0, c0+4]` contains `{1,2}` or `{5,6}` | `[propext, Quot.sound]` |
+| **12** | [`black_odd_row_transversal_hand_proof`](lean4/Connect5HandProof.lean#L381) | Player 2 (Black) odd-row transversal covers all 24 diagonals & odd horizontals | `[propext, Quot.sound]` |
+
+### Excerpt from [`lean4/Connect5HandProof.lean`](lean4/Connect5HandProof.lean#L172-L214)
+```lean
+theorem erdos_10cell_transversal_hand_proof (c0 r4 s : Int)
+    (hL : ValidNonVerticalLine c0 r4 s) :
+    ∃ c : Int, c0 ≤ c ∧ c ≤ c0 + 4 ∧ InCore10 c (rowAt r4 s c) := by
+  rcases hL with ⟨hc0_low, hc0_high, hs, hr_left_low, hr_left_high, hr_right_low, hr_right_high⟩
+  unfold rowAt InCore10 at *
+  rcases hs with rfl | rfl | rfl
+  · -- Slope s = -1 (down-right diagonal `\`):
+    by_cases h_odd : r4 % 2 = 1
+    · exact ⟨4, by omega, by omega,
+        Or.inr (Or.inr (Or.inl ⟨rfl, odd_row_1_3_5 _ (by omega) (by omega) (by omega)⟩))⟩
+    · by_cases h_c0 : c0 ≤ 2
+      · by_cases h_high : r4 + -1 * (2 - 4) ≤ 6
+        · exact ⟨2, by omega, by omega,
+            Or.inr (Or.inl ⟨rfl, even_row_2_4_6 _ (by omega) (by omega) h_high⟩)⟩
+        · exact ⟨6, by omega, by omega,
+            Or.inr (Or.inr (Or.inr ⟨rfl, even_row_2_4_6 _ (by omega) (by omega) (by omega)⟩))⟩
+      · exact ⟨6, by omega, by omega,
+          Or.inr (Or.inr (Or.inr ⟨rfl, even_row_2_4_6 _ (by omega) (by omega) (by omega)⟩))⟩
+  -- (Remaining slopes s = 0 and s = 1 proved identically via Presburger `omega`)
 ```
 
 ---
