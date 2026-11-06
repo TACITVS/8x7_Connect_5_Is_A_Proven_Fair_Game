@@ -5,6 +5,7 @@
 ### **Analytic Modulo-2 Hypergraph Transversals, Gravitational Induction, and Foundations Across Common Lisp (ACL2), Haskell, Rocq 9.1, and Lean 4**
 
 [![Back to Main Repository](https://img.shields.io/badge/⬅_Back_to_Main_Landing_Page-README.md-2563eb?style=for-the-badge)](README.md)
+[![Lean 4.35.0 Verified](https://img.shields.io/badge/Lean_4.35.0-12_Analytic_Hand--Proof_Theorems_(0_Sorrys)-10b981?style=for-the-badge)](lean4/Connect5HandProof.lean)
 [![Paper II AMS PDF](https://img.shields.io/badge/📄_Download_Paper_II-AMS_Style_PDF-dc2626?style=for-the-badge)](paper/connect5_8x7_hilbert_erdos_AMS.pdf)
 [![Paper II ACS PDF](https://img.shields.io/badge/📄_Download_Paper_II-ACS_Two--Column_PDF-7c3aed?style=for-the-badge)](paper/connect5_8x7_hilbert_erdos_ACS.pdf)
 [![Historical Monograph](https://img.shields.io/badge/📜_Companion_Monograph-Historical_Audit-f59e0b?style=for-the-badge)](HISTORICAL_AND_LITERATURE_ANALYSIS.md)
@@ -17,7 +18,7 @@
 > **Abstract of Follow-Up Paper II**: In Paper I ([`paper/connect5_8x7_fairness_AMS.pdf`](paper/connect5_8x7_fairness_AMS.pdf)), we proved that Connect-5 on an `8 × 7` board with gravity is a fair game (`game_value = Draw`) via a 1,160-line constructive formalization in **Rocq 9.1** paired with a **405.35M evaluations/second CUDA bitboard engine**. A natural foundational question arises:
 > *How would classical mathematicians such as **David Hilbert**, **Ernst Zermelo**, and **Paul Erdős** prove this theorem purely by hand with pen and paper, without computer enumeration of the 76 winning lines?*
 >
-> In this follow-up paper, we present a complete, human-readable **Hilbert–Zermelo–Erdős pen-and-paper proof** of the combinatorial core of `8 × 7` Connect-5 fairness. Using only the **Pigeonhole Principle on 5-column windows** and **modular arithmetic (`mod 2`)** along affine lines of slope `s ∈ {0, +1, −1}`, we prove analytically in 12 lines that a **10-cell transversal `C₁₀`** blocks all 52 horizontal and diagonal winning lines, while three vertical dominoes per column block all 24 vertical lines. We further provide an analytic proof of the **Rule R3 Frozen-Threat Parity Law (`odd − odd = even`)**, pinpointing the exact boundary where pure deductive mathematics meets the finite opening trunk. Finally, we compare how this proof is mechanized across the spectrum of formal foundations: from **Common Lisp** (via Boyer–Moore's untyped applicative logic **ACL2** and homoiconic LCF macro kernels) and **Haskell (`System Fω`)** to **Rocq 9.1 (`CIC`)** and **Lean 4 (`Quotient Types` + `omega`)**.
+> In this follow-up paper, we present a complete, human-readable **Hilbert–Zermelo–Erdős pen-and-paper proof** of the combinatorial core of `8 × 7` Connect-5 fairness—and its complete **zero-enumeration analytic formalization in Lean 4.35.0 ([`lean4/Connect5HandProof.lean`](lean4/Connect5HandProof.lean))**. Using only the **Pigeonhole Principle on 5-column windows** and **modular arithmetic (`mod 2`)** along affine lines of slope `s ∈ {0, +1, −1}`, we prove analytically in 12 lines that a **10-cell transversal `C₁₀`** blocks all 52 horizontal and diagonal winning lines, while three vertical dominoes per column block all 24 vertical lines. We further provide an analytic proof of the **Rule R3 Frozen-Threat Parity Law (`odd − odd = even`)**, pinpointing the exact boundary where pure deductive mathematics meets the finite opening trunk. Finally, we compare how this proof is mechanized across the spectrum of formal foundations: from **Common Lisp** (via Boyer–Moore's untyped applicative logic **ACL2** and homoiconic LCF macro kernels) and **Haskell (`System Fω`)** to **Rocq 9.1 (`CIC`)** and **Lean 4.35.0 (`Quotient Types` + `omega`)**.
 
 <div align="center">
   <img src="assets/erdos_10cell_proof.svg" alt="The Hilbert-Erdos Pen-and-Paper Proof: 10-Cell Modulo-2 Transversal (C10)" width="98%"/>
@@ -32,7 +33,8 @@
 3. [David Hilbert & Ernst Zermelo's Inductive Framework & Rule R3 Parity Law](#-3-david-hilbert--ernst-zermelos-inductive-framework--rule-r3-parity-law)
 4. [Where Pure Pen-and-Paper Stops and the Computer Must Help](#-4-where-pure-pen-and-paper-stops-and-the-computer-must-help)
 5. [Foundations of Mechanization: Common Lisp (ACL2 & Homoiconic LCF), Haskell, Rocq 9.1, and Lean 4](#-5-foundations-of-mechanization-common-lisp-acl2--homoiconic-lcf-haskell-rocq-91-and-lean-4)
-6. [Download the Compiled Academic PDFs (AMS & ACS Styles)](#-6-download-the-compiled-academic-pdfs-ams--acs-styles)
+6. [Machine-Checked Formalization of the Hand Proof in Lean 4.35.0](#-6-machine-checked-formalization-of-the-hand-proof-in-lean-4350)
+7. [Download the Compiled Academic PDFs (AMS & ACS Styles)](#-7-download-the-compiled-academic-pdfs-ams--acs-styles)
 
 ---
 
@@ -182,11 +184,48 @@ Static types are *not* the only path to machine-checked mathematical truth. **Co
 | **Common Lisp (`ACL2`)** | Untyped 1st-Order Applicative Lisp | **Ordinal measure `< ε₀`** on `defun` | Automated induction waterfall + native `SBCL` evaluation | ✅ **Sound** |
 | **Common Lisp (`LCF / Macro CIC`)** | Sealed `theorem` package or macro CIC | Kernel/macro structural guard | Homoiconic `defmacro` tactics + S-expression kernel | ✅ **Sound** |
 | **Rocq 9.1 (`Coq`)** | Intensional `CIC` (`λPω`) | Kernel structural guard & `Acc` | `follow_up` induction + `vm_compute` boolean reflection | ✅ **Sound (0 Axioms)** |
-| **Lean 4** | `CIC` + Native `Quotient` Types | Kernel structural / `termination_by` | Analytic Presburger `omega` tactic + `decide` kernel reduction | ✅ **Sound (0 Axioms)** |
+| **Lean 4.35.0** | `CIC` + Native `Quotient` Types | Kernel structural / `termination_by` | Analytic Presburger `omega` tactic + constructive case splits | ✅ **Sound (0 Sorrys)** |
 
 ---
 
-## 📄 6. Download the Compiled Academic PDFs (AMS & ACS Styles)
+## 💎 6. Machine-Checked Formalization of the Hand Proof in Lean 4.35.0
+
+In [`lean4/Connect5HandProof.lean`](lean4/Connect5HandProof.lean), we formalize the entire **Hilbert–Zermelo–Erdős pen-and-paper proof** in **Lean 4.35.0** (`leanprover/lean4:v4.35.0`). Unlike [`C5CertChecker.v`](C5CertChecker.v) in Rocq 9.1—which verifies the 76 winning lines by enumerating `all_lines` and evaluating `check_cover` via `vm_compute`—our Lean 4 formalization states the theorems **analytically over affine line equations on `ℤ`** (`rowAt r4 s c = r4 + s * (c - 4)`) and proves them using the exact Pigeonhole and Modulo-2 Parity steps of our hand proof!
+
+Even more remarkably, by providing constructive `Decidable` instances and explicit parity classification lemmas (`odd_row_1_3_5` and `even_row_2_4_6`), **all 12 Lean 4 theorems are proved 100% constructively—none of them even invoke `Classical.choice`**!
+
+### All 12 Constructive Hand-Proof Theorems Verified in [`lean4/Connect5HandProof.lean`](lean4/Connect5HandProof.lean)
+
+| # | Lean 4 Theorem Identifier | Corresponding Hand-Proof Step | Axioms Used (`#print axioms`) |
+| :-: | :--- | :--- | :---: |
+| **1** | [`ply1_parity_obstruction`](lean4/Connect5HandProof.lean#L63) | Proposition 2.1: `8*7 - 1 = 55`, `55 % 2 = 1`, and `∀ k : Nat, 2 * k ≠ 55` | `[propext, Quot.sound]` |
+| **2** | [`vertical_domino_transversal`](lean4/Connect5HandProof.lean#L82) | Lemma 1: Every 5-row vertical window `[r0, r0+4]` contains `{1,2}` or `{3,4}` | `[propext, Quot.sound]` |
+| **3** | [`pigeonhole_5col_window`](lean4/Connect5HandProof.lean#L114) | Step 1 (Pigeonhole): Every 5-col window `[c0, c0+4]` contains `3, 4` and `2` or `6` | `[propext, Quot.sound]` |
+| **4** | [`modulo2_parity_preservation`](lean4/Connect5HandProof.lean#L128) | Step 2A (Parity): `r4 % 2 = 0 → rowAt r4 s 2 % 2 = 0 ∧ rowAt r4 s 6 % 2 = 0` | `[propext, Quot.sound]` |
+| **5** | [`erdos_10cell_transversal_hand_proof`](lean4/Connect5HandProof.lean#L172) | **Theorem 1:** Every valid non-vertical 5-line `(c0, r4, s)` intersects `C₁₀` | `[propext, Quot.sound]` |
+| **6** | [`dead_cell_4_6_vertical_double_blocked`](lean4/Connect5HandProof.lean#L244) | Proposition 1A: Vertical line through `(4,6)` hits both `(4,3)` and `(4,5)` | **None (`0 axioms`)** |
+| **7** | [`dead_cell_4_6_nonvertical_double_blocked`](lean4/Connect5HandProof.lean#L254) | Proposition 1B: Every non-vertical line through `(4,6)` hits `≥ 2` cells of `U` | `[propext, Quot.sound]` |
+| **8** | [`r3_frozen_suffix_restores_even_parity`](lean4/Connect5HandProof.lean#L296) | **Theorem 2 (Rule R3):** `E % 2 = 1 ∧ ft % 2 = 1 → (E - (8 - ft)) % 2 = 0` | `[propext, Quot.sound]` |
+| **9** | [`zermelo_mutual_safety_draw`](lean4/Connect5HandProof.lean#L337) | Zermelo Equilibrium: `SafeOutcome White o ∧ SafeOutcome Black o → o = Draw` | `[propext]` |
+| **10** | [`allis_followup_induction`](lean4/Connect5HandProof.lean#L354) | Inductive Follow-Up Principle over remaining empty cells `E : Nat` | `[propext, Quot.sound]` |
+| **11** | [`horizontal_5col_pair_transversal`](lean4/Connect5HandProof.lean#L368) | Every 5-column window `[c0, c0+4]` contains `{1, 2}` or `{5, 6}` | `[propext, Quot.sound]` |
+| **12** | [`black_odd_row_transversal_hand_proof`](lean4/Connect5HandProof.lean#L381) | Player 2 (Black) odd-row transversal covers all 24 diagonals & odd horizontals | `[propext, Quot.sound]` |
+
+### Reproducing the Lean 4.35.0 Verification
+```powershell
+powershell -ExecutionPolicy Bypass -File .\build_lean.ps1
+```
+Output:
+```text
+=== Compiling Hilbert-Zermelo-Erdos Hand Proof in Lean 4 ===
+Lean (version 4.35.0, x86_64-w64-windows-gnu, commit eb6cafb7290e8bd5f2937522d8d804f58f02bafc, Release)
+...
+All 12 analytic Hilbert-Erdos theorems verified in Lean 4 (2.96s) with ZERO sorrys and ZERO custom axioms!
+```
+
+---
+
+## 📄 7. Download the Compiled Academic PDFs (AMS & ACS Styles)
 
 - **Follow-Up Paper II (American Mathematical Society `amsart` Style):**
   - [**`paper/connect5_8x7_hilbert_erdos_AMS.pdf`**](paper/connect5_8x7_hilbert_erdos_AMS.pdf)

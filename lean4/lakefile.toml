@@ -1,0 +1,7 @@
+name = "Connect5HandProof"
+version = "0.1.0"
+defaultTargets = ["Connect5HandProof"]
+
+[[lean_lib]]
+name = "Connect5HandProof"
+srcDir = "."

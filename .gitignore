@@ -26,3 +26,6 @@ paper/*.toc
 # Temporary / scratch files
 scratch/
 *.tmp
+
+# Lean 4 / Lake build artifacts
+lean4/.lake/
