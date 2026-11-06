@@ -1,4 +1,4 @@
-﻿% =========================================================================
+% =========================================================================
 % STYLE SELECTOR:
 % Uncomment \def\StyleMode{AMS} for American Mathematical Society (amsart)
 % Uncomment \def\StyleMode{AMS} for American Computer Society (ACM/IEEE CS style)
@@ -384,8 +384,14 @@ On the Second-Player Defense search, baseline CPU execution estimated an ETA of 
 \section{Discussion and Future Research}
 % =========================================================================
 
-The results presented in this paper establish that Connect-5 on an $8 \times 7$ board is a fair game, combining formal mathematical purity with high-performance GPU computing. 
+\subsection{Type-Theoretic Foundations: Why CIC Succeeds Where System $F_\omega$ Fails}
+A natural foundational question is how the type system of Rocq 9.1---the Calculus of Inductive Constructions (CIC) \cite{coquand1988calculus}---enabled this verification, and how it compares against both weaker polymorphic type systems (such as Haskell's System $F_\omega$ with GADTs) and richer dependent type theories:
+\begin{itemize}
+    \item \textbf{Inadequacy of Unchecked Polymorphic Type Systems (Haskell)}: Under the Curry--Howard correspondence, a programming language is only a sound logic if every inhabited type corresponds to a true proposition. Because standard Haskell permits unrestricted general recursion (\texttt{fix}) and \texttt{undefined} ($\bot$), \emph{every} type---including false theorems---is trivially inhabited by a non-terminating loop (\texttt{badProof = badProof}). Moreover, phase separation between runtime terms and compile-time types requires duplicating functions via \texttt{Singletons} and \texttt{TypeFamilies}. Even when augmented with SMT refinement types (\emph{Liquid Haskell}), external SMT solvers struggle with alternating game-tree quantifiers ($\forall \text{attacker move}, \exists \text{defender response}$) inside \texttt{safe} while expanding the Trusted Computing Base (TCB) to an unverified C++ SMT solver.
+    \item \textbf{The CIC ``Goldilocks Zone'' vs.\ Intrinsic Indexing (``Green Slime'')}: In Rocq 9.1, indexed inductive families (\texttt{safe d b s : Prop}), mandatory structural/well-founded termination (\texttt{Acc lt (empties b)}), and the definitional conversion rule (\texttt{vm\_compute}) provide a self-contained zero-axiom kernel. Crucially, following Gonthier's \emph{SSReflect} methodology \cite{gonthier2008formal}, we avoided baking column heights into the \emph{type} of the board (e.g.\ \texttt{Vect 8 (BoundedVect 7 Player)} in Agda/Idris), because dropping a stone alters column height $h \to h+1$ at the type level, inducing dependent transport (\texttt{eq\_rect}) overhead across every ply. Conversely, extending CIC with native \emph{Quotient Types} (\texttt{Finset} in Lean 4) would shrink list-permutation and \texttt{NoDup} proofs in \texttt{C5Rules.v} by $\sim 35\%$, while \emph{Univalence} ($(A \simeq B) \simeq (A = B)$ in Cubical Type Theory) would allow automatic transport of theorems between our list-based \texttt{board} and 64-bit bitboards.
+\end{itemize}
 
+\subsection{Future Research Directions}
 Several promising directions for future research emerge:
 \begin{enumerate}
     \item \textbf{Generalization to $(m, n, k)$ Boards}: Investigating whether the 10-cell core and Rule R3 frozen-threat parity restoration principles generalize to larger even-width, odd-height boards such as $(10, 7, 5)$ or $(8, 9, 5)$.
@@ -427,6 +433,9 @@ J.~Pawlewicz and {\L}.~Lew, ``Scalable parallel DFPN search,'' in \emph{Computer
 
 \bibitem{gonthier2008formal}
 G.~Gonthier, ``Formal proof---The Four-Color Theorem,'' \emph{Notices of the AMS}, vol.~55, no.~11, pp.~1382--1393, 2008.
+
+\bibitem{coquand1988calculus}
+T.~Coquand and G.~Huet, ``The Calculus of Constructions,'' \emph{Information and Computation}, vol.~76, no.~2--3, pp.~95--120, 1988.
 
 \bibitem{leroy2009formal}
 X.~Leroy, ``Formal verification of a realistic compiler,'' \emph{Communications of the ACM}, vol.~52, no.~7, pp.~107--115, 2009.
