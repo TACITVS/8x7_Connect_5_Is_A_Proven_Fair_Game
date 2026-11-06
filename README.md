@@ -3,11 +3,12 @@
 [![Rocq 9.1 Verified](https://img.shields.io/badge/Rocq%209.1-12%20Theorems%20Verified%20(0%20Axioms)-success.svg?style=for-the-badge&logo=coq)](CheckAssumptions.v)
 [![Game Theory Status](https://img.shields.io/badge/Game%20Theoretic%20Value-Draw%20(Fair)-blue.svg?style=for-the-badge)](C5Certificate.v)
 [![Historical Monograph](https://img.shields.io/badge/📜%20Must%20Read-38--Year%20Historical%20%26%20Literature%20Audit-f59e0b.svg?style=for-the-badge)](HISTORICAL_AND_LITERATURE_ANALYSIS.md)
+[![Follow-Up Paper II](https://img.shields.io/badge/📖%20New%20Paper%20II-Hilbert--Erdős%20Pen--and--Paper%20Proof%20%26%20Lisp-8b5cf6.svg?style=for-the-badge)](HILBERT_ERDOS_PEN_AND_PAPER_PROOF.md)
 [![CUDA 13.5 Accelerated](https://img.shields.io/badge/CUDA%2013.5-405M%20Evals%2Fsec-76B900.svg?style=for-the-badge&logo=nvidia)](solver/c5_gpu_search.cu)
 [![Clang 23 Optimized](https://img.shields.io/badge/Compiler-Clang%2023%20%7C%20GCC%2014-orange.svg?style=for-the-badge&logo=llvm)](solver/pdfpn_fast.c)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge)](LICENSE)
 
-> **Abstract:** In combinatorial game theory, determining the exact game-theoretic value of positional games with gravity on asymmetric boards presents severe computational and deductive barriers. While standard Connect-Four (7 × 6, 4-in-a-row) is a known first-player win (Victor Allis & James D. Allen, 1988), extending the connection target to 5-in-a-row on an 8 × 7 grid restores game-theoretic equilibrium. We present the first complete formal mathematical proof in **Rocq 9.1 (Coq)** establishing that **Connect-5 on an 8 × 7 board with gravity is a theoretically fair game** (`game_value = Draw`). The proof is 100% machine-checked with **zero unproven axioms and zero admits**, verified through a 1,160-line deductive mechanization of Victor Allis's pairing theory (`C5Rules.v`), inductive strategy trees, and computational reflection (`vm_compute`), complemented by a native **CUDA 13.5 / Clang** bitboard engine evaluating **405.35 Million positions/second**.
+> **Abstract:** In combinatorial game theory, determining the exact game-theoretic value of positional games with gravity on asymmetric boards presents severe computational and deductive barriers. While standard Connect-Four (7 × 6, 4-in-a-row) is a known first-player win (Victor Allis & James D. Allen, 1988), extending the connection target to 5-in-a-row on an 8 × 7 grid restores game-theoretic equilibrium. We present the first complete formal mathematical proof in **Rocq 9.1 (Coq)** establishing that **Connect-5 on an 8 × 7 board with gravity is a theoretically fair game** (`game_value = Draw`). The proof is 100% machine-checked with **zero unproven axioms and zero admits**, verified through a 1,160-line deductive mechanization of Victor Allis's pairing theory (`C5Rules.v`), inductive strategy trees, and computational reflection (`vm_compute`), complemented by a native **CUDA 13.5 / Clang** bitboard engine evaluating **405.35 Million positions/second**, and accompanied by **Follow-Up Paper II** presenting the classical **Hilbert–Zermelo–Erdős pen-and-paper proof** (`HILBERT_ERDOS_PEN_AND_PAPER_PROOF.md`).
 
 ---
 
@@ -26,6 +27,21 @@
   </a>
 </p>
 
+> [!TIP]
+> ### 📖 NEW — Follow-Up Paper II: How Would David Hilbert & Paul Erdős Prove 8×7 Connect-5 Fairness on a Single Napkin? (Plus Common Lisp, ACL2 & Homoiconic Macros)
+> Suppose you had **no computer, no GPU, and no `vm_compute`**—how would **David Hilbert**, **Ernst Zermelo**, and **Paul Erdős** write a human-surveyable pen-and-paper proof of our theorems? And how does **untyped Common Lisp** (via **Boyer–Moore's ACL2** and **homoiconic macro/LCF kernels**) achieve the same mathematical certainty as **Rocq 9.1** and **Lean 4**?
+> - **Zero-Enumeration 12-Line Analytic Proof of the 10-Cell Core (`core10_covers_all_76_lines`):** Proves via the **Pigeonhole Principle** on 5-column spans and **Modulo-2 Parity** (`r(c_even) = r(4) ± 2s ≡ r(4) (mod 2)`) that our 10-cell transversal blocks all 52 horizontal and diagonal winning lines without inspecting a single line by computer!
+> - **Read Follow-Up Paper II Now:**
+>   - 📘 **Interactive Markdown Edition:** [**`HILBERT_ERDOS_PEN_AND_PAPER_PROOF.md`**](HILBERT_ERDOS_PEN_AND_PAPER_PROOF.md)
+>   - 📕 **AMS Journal PDF (Single-Column):** [**`paper/connect5_8x7_hilbert_erdos_AMS.pdf`**](paper/connect5_8x7_hilbert_erdos_AMS.pdf)
+>   - 📗 **ACS Two-Column PDF:** [**`paper/connect5_8x7_hilbert_erdos_ACS.pdf`**](paper/connect5_8x7_hilbert_erdos_ACS.pdf)
+
+<p align="center">
+  <a href="HILBERT_ERDOS_PEN_AND_PAPER_PROOF.md">
+    <img src="assets/erdos_10cell_proof.svg" alt="The Erdős-Style Pen-and-Paper Proof of the 10-Cell Transversal (Zero Computer Enumeration)" width="98%"/>
+  </a>
+</p>
+
 ---
 
 ## 📑 Table of Contents
@@ -34,9 +50,9 @@
 3. [Architecture & Verification Pipeline](#-architecture--verification-pipeline)
 4. [The First-Player Parity Trap, 27-Pair Coverage & Rule R3](#-the-first-player-parity-trap-27-pair-coverage--rule-r3)
 5. [Formal Verification Structure & 12 Machine-Checked Theorems (Rocq 9.1)](#-formal-verification-structure--12-machine-checked-theorems-rocq-91)
-6. [Type-Theoretic Foundations: Rocq 9.1 (CIC) vs. Haskell vs. Higher Type Theories](#-type-theoretic-foundations-rocq-91-cic-vs-haskell-vs-higher-type-theories)
+6. [Type-Theoretic Foundations: Rocq 9.1 (CIC) vs. Haskell vs. Common Lisp vs. Higher Type Theories](#-type-theoretic-foundations-rocq-91-cic-vs-haskell-vs-common-lisp-vs-higher-type-theories)
 7. [Massively Parallel GPU Solver & Benchmarks (Log Scale)](#-massively-parallel-gpu-solver--benchmarks-log-scale)
-8. [Academic Preprint (AMS & ACS Styles)](#-academic-preprint-ams--acs-styles)
+8. [Academic Preprints — Paper I & Follow-Up Paper II (AMS & ACS Styles)](#-academic-preprints--paper-i--follow-up-paper-ii-ams--acs-styles)
 9. [Repository File Tree](#-repository-file-tree)
 10. [Reproduction & Build Instructions](#-reproduction--build-instructions)
 11. [Citation & License](#-citation--license)
@@ -166,9 +182,9 @@ Closed under the global context  (x12 — all 12 theorems verified with 0 axioms
 
 ---
 
-## 🧠 Type-Theoretic Foundations: Rocq 9.1 (CIC) vs. Haskell vs. Higher Type Theories
+## 🧠 Type-Theoretic Foundations: Rocq 9.1 (CIC) vs. Haskell vs. Common Lisp vs. Higher Type Theories
 
-How did the type system of **Rocq 9.1 (Coq)**—the **Calculus of Inductive Constructions (CIC)**—make this proof possible? Could we have proven it in a weaker polymorphic type system like **Haskell (System Fω)**? Conversely, would an even stronger type system have made the proof simpler?
+How did the type system of **Rocq 9.1 (Coq)**—the **Calculus of Inductive Constructions (CIC)**—make this proof possible? Could we have proven it in a weaker polymorphic type system like **Haskell (System Fω)**, or in **untyped Homoiconic Common Lisp**? Conversely, would an even stronger type system have made the proof simpler?
 
 <p align="center">
   <img src="assets/type_theory_spectrum.svg" alt="The Type-Theory Spectrum for Proving 8x7 Connect-5 Fairness" width="98%"/>
@@ -189,7 +205,12 @@ Sitting at the apex of **Barendregt's Lambda Cube (`λPω`)**, Rocq's CIC provid
 | **Dependent `Π / Σ` Types** | **First-Class Native Support** (`forall b : board, safe d b s`) | **Phase-Separated** (Requires `Singletons` & `TypeFamily` duplication) | Lifting [`C5Rules.v`](C5Rules.v) to GHC's type level would require duplicating every board/list function as a closed `TypeFamily` and threading hundreds of `:~:` equality casts. |
 | **Refinement Add-ons (`Liquid Haskell`)** | **Self-Contained Tiny Kernel** (Zero external trust) | **External C++ SMT Solver (`Z3`)** | SMT solvers excel at linear bounds (`0 <= c < 8`) but struggle with **alternating game-tree quantifiers** (`∀ attacker move, ∃ defender response`) and expand the Trusted Computing Base to all of GHC + Z3. |
 
-### 3. Would an Even Stronger Type System Make the Proof Simpler?
+### 3. How Untyped Homoiconic Common Lisp Succeeds Where Haskell Fails (See [Follow-Up Paper II](HILBERT_ERDOS_PEN_AND_PAPER_PROOF.md))
+Even though **Common Lisp** is dynamically typed at the hardware level, its **homoiconicity** (`code === S-expression data`) and **compile-time macro expansion (`defmacro`)** provide two rock-solid routes to formal verification (analyzed in depth in [**`HILBERT_ERDOS_PEN_AND_PAPER_PROOF.md`**](HILBERT_ERDOS_PEN_AND_PAPER_PROOF.md)):
+1. **The Boyer–Moore `ACL2` Paradigm (Total Applicative Common Lisp):** Enforces **totality** via ordinal measures `< ε₀` on every `defun` and replaces dependent types with **boolean predicate guards (`check-static`)**—compiling reflection checks (`(equal (check-cover 'WHITE *b-open* *white-core10-struct*) t)`) directly to native x86-64 machine code via `SBCL`!
+2. **Homoiconic LCF & Macro-Level Dependent Type Kernels (`Milawa`, `Pie`, `Cur`):** Seals a `theorem` struct inside a tiny ~300-line Common Lisp package or runs a Calculus of Inductive Constructions type-checker inside `defmacro` at macro-expansion time, uniting object code, types, and proof tactics into one S-expression language.
+
+### 4. Would an Even Stronger Type System Make the Proof Simpler?
 Moving beyond standard CIC reveals a striking trade-off between **intrinsic indexing** and **extensional quotients**:
 - **Intrinsic Dependent Indexing (`Fin 8`, `Vect 7` in Agda / Idris 2) — *Actually Harder ("Green Slime" Hell)!***
   If column heights are baked into the *type* of the board (`Vect 8 (BoundedVect 7 Player)`), then playing a stone `(play b c p)` changes column `c`'s height from `h` to `h + 1` **inside the type itself**! Comparing `b` and `play b c p` then requires dependent transport casts (`eq_rect` / heterogeneous equality), known as *"green slime"* (McBride). Following Gonthier's *SSReflect* methodology, keeping data types simple (`nat * nat`, `list (list player)`) and reflecting invariants via [`check_static`](C5CertChecker.v) is vastly cleaner.
@@ -241,19 +262,21 @@ static inline bool check_win_5(uint64_t bb) {
 
 ---
 
-## 📄 Academic Preprint (AMS & ACS Styles)
+## 📄 Academic Preprints — Paper I & Follow-Up Paper II (AMS & ACS Styles)
 
-A complete research paper describing the mathematical theory, deductive Rocq mechanization, historical context, GPU architecture, and game-theoretic proofs is included in [`paper/`](paper/):
+Two complete research papers and two comprehensive markdown monographs are included in [`paper/`](paper/) and the repository root:
 
-- **American Mathematical Society (AMS) Style:**
-  - PDF: [**`paper/connect5_8x7_fairness_AMS.pdf`**](paper/connect5_8x7_fairness_AMS.pdf) (Single column `amsart`, 6 pages)
-- **American Computer Society (ACS / IEEE CS) Style:**
-  - PDF: [**`paper/connect5_8x7_fairness_ACS.pdf`**](paper/connect5_8x7_fairness_ACS.pdf) (Two-column `article`, 5 pages)
-- **Unified Dual-Mode LaTeX Source:**
-  - File: [`paper/connect5_8x7_fairness.tex`](paper/connect5_8x7_fairness.tex)
-  - Toggle style at line 6: `\def\StyleMode{AMS}` or `\def\StyleMode{ACS}`.
-- **Companion Historical & Literature Monograph:**
-  - File: [**`HISTORICAL_AND_LITERATURE_ANALYSIS.md`**](HISTORICAL_AND_LITERATURE_ANALYSIS.md)
+### 1. Paper I: Formal Verification in Rocq 9.1 & GPU Strategy Synthesis
+- **American Mathematical Society (AMS) Style:** [**`paper/connect5_8x7_fairness_AMS.pdf`**](paper/connect5_8x7_fairness_AMS.pdf) (Single-column `amsart`)
+- **American Computer Society (ACS / IEEE CS) Style:** [**`paper/connect5_8x7_fairness_ACS.pdf`**](paper/connect5_8x7_fairness_ACS.pdf) (Two-column `article`)
+- **Unified Dual-Mode LaTeX Source:** [`paper/connect5_8x7_fairness.tex`](paper/connect5_8x7_fairness.tex)
+- **Companion Historical & Literature Monograph:** [**`HISTORICAL_AND_LITERATURE_ANALYSIS.md`**](HISTORICAL_AND_LITERATURE_ANALYSIS.md)
+
+### 2. Follow-Up Paper II: The Hilbert–Zermelo–Erdős Pen-and-Paper Proof & Common Lisp / Type Foundations
+- **Interactive Markdown Edition:** [**`HILBERT_ERDOS_PEN_AND_PAPER_PROOF.md`**](HILBERT_ERDOS_PEN_AND_PAPER_PROOF.md)
+- **American Mathematical Society (AMS) Style:** [**`paper/connect5_8x7_hilbert_erdos_AMS.pdf`**](paper/connect5_8x7_hilbert_erdos_AMS.pdf) (Single-column `amsart`)
+- **American Computer Society (ACS / IEEE CS) Style:** [**`paper/connect5_8x7_hilbert_erdos_ACS.pdf`**](paper/connect5_8x7_hilbert_erdos_ACS.pdf) (Two-column `article`)
+- **Unified Dual-Mode LaTeX Source:** [`paper/connect5_8x7_hilbert_erdos_pen_and_paper.tex`](paper/connect5_8x7_hilbert_erdos_pen_and_paper.tex)
 
 ---
 
@@ -263,6 +286,7 @@ A complete research paper describing the mathematical theory, deductive Rocq mec
 8x7_Connect_5_Is_A_Proven_Fair_Game/
 ├── README.md                              # Publication landing page
 ├── HISTORICAL_AND_LITERATURE_ANALYSIS.md  # In-depth 38-year historical, folklore & type-theory monograph
+├── HILBERT_ERDOS_PEN_AND_PAPER_PROOF.md   # Follow-Up Paper II: Classical pen-and-paper proof & Common Lisp audit
 ├── LICENSE                                # MIT License
 ├── build.ps1                              # Automated Rocq 9.1 proof compiler
 ├── _CoqProject                            # Rocq platform configuration
@@ -279,14 +303,18 @@ A complete research paper describing the mathematical theory, deductive Rocq mec
 ├── assets/                                # High-resolution vector diagrams
 │   ├── historical_timeline.svg            # 38-year historical timeline & folklore vs. novelty split
 │   ├── type_theory_spectrum.svg           # Type-theory spectrum: Haskell vs. Rocq 9.1 CIC vs. HoTT
+│   ├── erdos_10cell_proof.svg             # Zero-enumeration Hilbert-Erdos proof of the 10-Cell Transversal
 │   ├── board_structure.svg                # Classic Connect board with Red & Yellow pieces
 │   ├── architecture_pipeline.svg          # Formal verification & synthesis architecture
 │   └── benchmark_chart.svg                # True Log-Scale performance benchmark graph (10^3 to 10^9)
 │
-├── paper/                                 # Academic publication preprints
-│   ├── connect5_8x7_fairness.tex          # Dual-mode (AMS / ACS) LaTeX source code
-│   ├── connect5_8x7_fairness_AMS.pdf      # AMS style preprint
-│   └── connect5_8x7_fairness_ACS.pdf      # ACS two-column style preprint
+├── paper/                                 # Academic publication preprints (Paper I & Follow-Up Paper II)
+│   ├── connect5_8x7_fairness.tex          # Paper I: Dual-mode (AMS / ACS) LaTeX source code
+│   ├── connect5_8x7_fairness_AMS.pdf      # Paper I: AMS style preprint
+│   ├── connect5_8x7_fairness_ACS.pdf      # Paper I: ACS two-column style preprint
+│   ├── connect5_8x7_hilbert_erdos_pen_and_paper.tex # Paper II: Dual-mode (AMS / ACS) LaTeX source code
+│   ├── connect5_8x7_hilbert_erdos_AMS.pdf # Paper II: AMS style preprint
+│   └── connect5_8x7_hilbert_erdos_ACS.pdf # Paper II: ACS two-column style preprint
 │
 └── solver/                                # High-performance search engines
     ├── c5_gpu_search.cu                   # Massively parallel CUDA 13.5 bitboard kernel (405M evals/sec)

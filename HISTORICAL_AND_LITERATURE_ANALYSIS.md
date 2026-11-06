@@ -6,7 +6,8 @@
 
 [![Back to Main Repository](https://img.shields.io/badge/⬅_Back_to_Main_Landing_Page-README.md-2563eb?style=for-the-badge)](README.md)
 [![Formal Proof](https://img.shields.io/badge/Rocq_9.1-12_Theorems_Closed_Under_Global_Context-10b981?style=for-the-badge)](CheckAssumptions.v)
-[![Paper AMS](https://img.shields.io/badge/Read_Full_Paper-AMS_PDF-dc2626?style=for-the-badge)](paper/connect5_8x7_fairness_AMS.pdf)
+[![Paper I AMS](https://img.shields.io/badge/Paper_I_(Rocq_%26_CUDA)-AMS_PDF-dc2626?style=for-the-badge)](paper/connect5_8x7_fairness_AMS.pdf)
+[![Paper II Hilbert-Erdos](https://img.shields.io/badge/📖_Follow--Up_Paper_II-Hilbert--Erdős_Pen--and--Paper_%26_Lisp-8b5cf6?style=for-the-badge)](HILBERT_ERDOS_PEN_AND_PAPER_PROOF.md)
 
 </div>
 
