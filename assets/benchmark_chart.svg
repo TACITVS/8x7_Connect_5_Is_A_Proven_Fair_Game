@@ -1,59 +1,94 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 380" width="100%" height="100%">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 430" width="100%" height="100%">
   <defs>
-    <linearGradient id="bgB" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#0f172a"/>
-      <stop offset="100%" stop-color="#1e293b"/>
+    <linearGradient id="bgBench" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0b1329"/>
+      <stop offset="100%" stop-color="#111827"/>
     </linearGradient>
     <linearGradient id="barGpu" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" stop-color="#10b981"/>
+      <stop offset="0%" stop-color="#059669"/>
       <stop offset="100%" stop-color="#34d399"/>
     </linearGradient>
-    <linearGradient id="barClang" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" stop-color="#3b82f6"/>
-      <stop offset="100%" stop-color="#60a5fa"/>
-    </linearGradient>
-    <linearGradient id="barGcc" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" stop-color="#6366f1"/>
-      <stop offset="100%" stop-color="#818cf8"/>
-    </linearGradient>
-    <linearGradient id="barBase" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" stop-color="#64748b"/>
-      <stop offset="100%" stop-color="#94a3b8"/>
-    </linearGradient>
+    <filter id="shadowB" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#000000" flood-opacity="0.5"/>
+    </filter>
   </defs>
 
-  <rect width="920" height="380" rx="16" fill="url(#bgB)"/>
+  <!-- Background -->
+  <rect width="960" height="430" rx="16" fill="url(#bgBench)"/>
 
-  <text x="460" y="38" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif" font-size="20" font-weight="700" fill="#f8fafc" text-anchor="middle">
-    Throughput Benchmark: CPU vs Clang vs NVIDIA RTX 4060 GPU
+  <!-- Title & Subtitle -->
+  <text x="480" y="38" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif" font-size="20" font-weight="800" fill="#f8fafc" text-anchor="middle">
+    Search Engine Throughput Benchmark (Logarithmic Scale log₁₀)
   </text>
-  <text x="460" y="60" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif" font-size="12" fill="#94a3b8" text-anchor="middle">
-    Logarithmic scale of board evaluations per second
+  <text x="480" y="60" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif" font-size="12" fill="#94a3b8" text-anchor="middle">
+    Massively Parallel 64-Bit CUDA Bitboard Kernel vs Multithreaded Clang &amp; GCC Solvers (RTX 4060 Laptop GPU)
   </text>
 
-  <!-- Chart Axis & Labels -->
-  <!-- Bar 1: Baseline CPU -->
-  <text x="240" y="105" font-family="sans-serif" font-size="13" font-weight="700" fill="#cbd5e1" text-anchor="end">Baseline CPU (GCC 13)</text>
-  <rect x="250" y="88" width="55" height="26" rx="4" fill="url(#barBase)"/>
-  <text x="315" y="106" font-family="sans-serif" font-size="12" fill="#94a3b8">10,000 /s (1.0x)</text>
+  <!-- Log Scale Axis Lines -->
+  <line x1="240.0" y1="80" x2="240.0" y2="340" stroke="#334155" stroke-width="1" stroke-dasharray="3,3"/>
+  <text x="240.0" y="358" font-family="sans-serif" font-size="11" font-weight="700" fill="#94a3b8" text-anchor="middle">10³ (1K)</text>
+  <line x1="330.0" y1="80" x2="330.0" y2="340" stroke="#334155" stroke-width="1" stroke-dasharray="3,3"/>
+  <text x="330.0" y="358" font-family="sans-serif" font-size="11" font-weight="700" fill="#94a3b8" text-anchor="middle">10⁴ (10K)</text>
+  <line x1="420.0" y1="80" x2="420.0" y2="340" stroke="#334155" stroke-width="1" stroke-dasharray="3,3"/>
+  <text x="420.0" y="358" font-family="sans-serif" font-size="11" font-weight="700" fill="#94a3b8" text-anchor="middle">10⁵ (100K)</text>
+  <line x1="510.0" y1="80" x2="510.0" y2="340" stroke="#334155" stroke-width="1" stroke-dasharray="3,3"/>
+  <text x="510.0" y="358" font-family="sans-serif" font-size="11" font-weight="700" fill="#94a3b8" text-anchor="middle">10⁶ (1M)</text>
+  <line x1="600.0" y1="80" x2="600.0" y2="340" stroke="#334155" stroke-width="1" stroke-dasharray="3,3"/>
+  <text x="600.0" y="358" font-family="sans-serif" font-size="11" font-weight="700" fill="#94a3b8" text-anchor="middle">10⁷ (10M)</text>
+  <line x1="690.0" y1="80" x2="690.0" y2="340" stroke="#334155" stroke-width="1" stroke-dasharray="3,3"/>
+  <text x="690.0" y="358" font-family="sans-serif" font-size="11" font-weight="700" fill="#94a3b8" text-anchor="middle">10⁸ (100M)</text>
+  <line x1="780.0" y1="80" x2="780.0" y2="340" stroke="#334155" stroke-width="1" stroke-dasharray="3,3"/>
+  <text x="780.0" y="358" font-family="sans-serif" font-size="11" font-weight="700" fill="#94a3b8" text-anchor="middle">10⁹ (1B)</text>
+  <line x1="267.1" y1="335" x2="267.1" y2="340" stroke="#475569" stroke-width="1"/>
+  <line x1="282.9" y1="335" x2="282.9" y2="340" stroke="#475569" stroke-width="1"/>
+  <line x1="302.9" y1="335" x2="302.9" y2="340" stroke="#475569" stroke-width="1"/>
+  <line x1="316.1" y1="335" x2="316.1" y2="340" stroke="#475569" stroke-width="1"/>
+  <line x1="357.1" y1="335" x2="357.1" y2="340" stroke="#475569" stroke-width="1"/>
+  <line x1="372.9" y1="335" x2="372.9" y2="340" stroke="#475569" stroke-width="1"/>
+  <line x1="392.9" y1="335" x2="392.9" y2="340" stroke="#475569" stroke-width="1"/>
+  <line x1="406.1" y1="335" x2="406.1" y2="340" stroke="#475569" stroke-width="1"/>
+  <line x1="447.1" y1="335" x2="447.1" y2="340" stroke="#475569" stroke-width="1"/>
+  <line x1="462.9" y1="335" x2="462.9" y2="340" stroke="#475569" stroke-width="1"/>
+  <line x1="482.9" y1="335" x2="482.9" y2="340" stroke="#475569" stroke-width="1"/>
+  <line x1="496.1" y1="335" x2="496.1" y2="340" stroke="#475569" stroke-width="1"/>
+  <line x1="537.1" y1="335" x2="537.1" y2="340" stroke="#475569" stroke-width="1"/>
+  <line x1="552.9" y1="335" x2="552.9" y2="340" stroke="#475569" stroke-width="1"/>
+  <line x1="572.9" y1="335" x2="572.9" y2="340" stroke="#475569" stroke-width="1"/>
+  <line x1="586.1" y1="335" x2="586.1" y2="340" stroke="#475569" stroke-width="1"/>
+  <line x1="627.1" y1="335" x2="627.1" y2="340" stroke="#475569" stroke-width="1"/>
+  <line x1="642.9" y1="335" x2="642.9" y2="340" stroke="#475569" stroke-width="1"/>
+  <line x1="662.9" y1="335" x2="662.9" y2="340" stroke="#475569" stroke-width="1"/>
+  <line x1="676.1" y1="335" x2="676.1" y2="340" stroke="#475569" stroke-width="1"/>
+  <line x1="717.1" y1="335" x2="717.1" y2="340" stroke="#475569" stroke-width="1"/>
+  <line x1="732.9" y1="335" x2="732.9" y2="340" stroke="#475569" stroke-width="1"/>
+  <line x1="752.9" y1="335" x2="752.9" y2="340" stroke="#475569" stroke-width="1"/>
+  <line x1="766.1" y1="335" x2="766.1" y2="340" stroke="#475569" stroke-width="1"/>
+  <line x1="240" y1="340" x2="780" y2="340" stroke="#64748b" stroke-width="1.5"/>
+  <text x="510.0" y="385" font-family="sans-serif" font-size="12" font-weight="700" fill="#cbd5e1" text-anchor="middle">Board Positions Evaluated / Second (log₁₀ scale)</text>
+  <text x="225" y="116" font-family="sans-serif" font-size="13" font-weight="700" fill="#e2e8f0" text-anchor="end">CPython 3.12 (1 Thread)</text>
+  <defs><linearGradient id="barGrad_0" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#64748b"/><stop offset="100%" stop-color="#94a3b8"/></linearGradient></defs>
+  <rect x="240" y="95" width="89.2" height="32" rx="6" fill="url(#barGrad_0)" filter="url(#shadowB)"/>
+  <text x="341.2" y="116" font-family="sans-serif" font-size="12" font-weight="700" fill="#ffffff">9,800 /s <tspan fill="#facc15" font-weight="800">(1.0×)</tspan></text>
+  <text x="225" y="164" font-family="sans-serif" font-size="13" font-weight="700" fill="#e2e8f0" text-anchor="end">GCC 14 -O3 (20 Threads)</text>
+  <defs><linearGradient id="barGrad_1" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#6366f1"/><stop offset="100%" stop-color="#818cf8"/></linearGradient></defs>
+  <rect x="240" y="143" width="199.6" height="32" rx="6" fill="url(#barGrad_1)" filter="url(#shadowB)"/>
+  <text x="451.6" y="164" font-family="sans-serif" font-size="12" font-weight="700" fill="#ffffff">165,000 /s <tspan fill="#facc15" font-weight="800">(16.8×)</tspan></text>
+  <text x="225" y="212" font-family="sans-serif" font-size="13" font-weight="700" fill="#e2e8f0" text-anchor="end">Clang 23 -O3 (20 Threads)</text>
+  <defs><linearGradient id="barGrad_2" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#0284c7"/><stop offset="100%" stop-color="#38bdf8"/></linearGradient></defs>
+  <rect x="240" y="191" width="209.0" height="32" rx="6" fill="url(#barGrad_2)" filter="url(#shadowB)"/>
+  <text x="461.0" y="212" font-family="sans-serif" font-size="12" font-weight="700" fill="#ffffff">210,000 /s <tspan fill="#facc15" font-weight="800">(21.4×)</tspan></text>
+  <text x="225" y="260" font-family="sans-serif" font-size="13" font-weight="700" fill="#e2e8f0" text-anchor="end">Clang White Threat Search</text>
+  <defs><linearGradient id="barGrad_3" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#0ea5e9"/><stop offset="100%" stop-color="#7dd3fc"/></linearGradient></defs>
+  <rect x="240" y="239" width="237.0" height="32" rx="6" fill="url(#barGrad_3)" filter="url(#shadowB)"/>
+  <text x="489.0" y="260" font-family="sans-serif" font-size="12" font-weight="700" fill="#ffffff">430,000 /s <tspan fill="#facc15" font-weight="800">(43.9×)</tspan></text>
+  <text x="225" y="308" font-family="sans-serif" font-size="13" font-weight="700" fill="#e2e8f0" text-anchor="end">NVIDIA RTX 4060 (CUDA 13.5)</text>
+  <defs><linearGradient id="barGrad_4" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#10b981"/><stop offset="100%" stop-color="#34d399"/></linearGradient></defs>
+  <rect x="240" y="287" width="504.7" height="32" rx="6" fill="url(#barGrad_4)" filter="url(#shadowB)"/>
+  <text x="756.7" y="308" font-family="sans-serif" font-size="12" font-weight="700" fill="#ffffff">405,350,000 /s <tspan fill="#facc15" font-weight="800">(41,362×)</tspan></text>
 
-  <!-- Bar 2: pdfpn_fast (GCC 20 threads) -->
-  <text x="240" y="160" font-family="sans-serif" font-size="13" font-weight="700" fill="#cbd5e1" text-anchor="end">pdfpn_fast (GCC 20T)</text>
-  <rect x="250" y="143" width="130" height="26" rx="4" fill="url(#barGcc)"/>
-  <text x="390" y="161" font-family="sans-serif" font-size="12" fill="#a5b4fc">90,000 /s (9.0x)</text>
-
-  <!-- Bar 3: Native Clang 23 (20 threads) -->
-  <text x="240" y="215" font-family="sans-serif" font-size="13" font-weight="700" fill="#cbd5e1" text-anchor="end">Native Clang 23 (20T)</text>
-  <rect x="250" y="198" width="180" height="26" rx="4" fill="url(#barClang)"/>
-  <text x="440" y="216" font-family="sans-serif" font-size="12" fill="#93c5fd" font-weight="700">210,000 /s (21.0x)</text>
-
-  <!-- Bar 4: Single-Thread Clang White Search -->
-  <text x="240" y="270" font-family="sans-serif" font-size="13" font-weight="700" fill="#cbd5e1" text-anchor="end">Clang Threat-Heuristic</text>
-  <rect x="250" y="253" width="240" height="26" rx="4" fill="url(#barClang)"/>
-  <text x="500" y="271" font-family="sans-serif" font-size="12" fill="#93c5fd">430,000 /s (43.0x)</text>
-
-  <!-- Bar 5: NVIDIA RTX 4060 GPU (CUDA) -->
-  <text x="240" y="325" font-family="sans-serif" font-size="14" font-weight="800" fill="#34d399" text-anchor="end">RTX 4060 GPU (CUDA 13.5)</text>
-  <rect x="250" y="308" width="540" height="28" rx="4" fill="url(#barGpu)"/>
-  <text x="800" y="327" font-family="sans-serif" font-size="13" font-weight="800" fill="#34d399">405,350,000 /s (~40,535x)</text>
+  <!-- GPU Benchmark Callout Badge -->
+  <rect x="250" y="398" width="460" height="22" rx="4" fill="#064e3b" stroke="#059669" stroke-width="1"/>
+  <text x="480" y="413" font-family="sans-serif" font-size="11" font-weight="800" fill="#a7f3d0" text-anchor="middle">
+    NVIDIA RTX 4060 GPU: 405.35 Million evals/sec — 41,362× faster than single-core CPU
+  </text>
 </svg>
