@@ -21,7 +21,7 @@ From C5 Require Import C5Game C5Board C5Principle C5Rules.
 
 (** ** Strategy tree datatype *)
 
-Inductive strategy (d : player) : board -> player -> Type :=
+Inductive strategy (d : player) : board -> player -> Prop :=
 | StratFull : forall b s,
     full b = true -> strategy d b s
 | StratLeaf : forall b st,

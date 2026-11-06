@@ -99,7 +99,6 @@ done:
 
 /* count proof DAG size (distinct canonical positions) */
 static long long pnodes, pleaf[5];
-static void visit_count(const Pos *p, u64 *seenA, u64 *seenB, long long cap);
 typedef struct { u64 a, b; } Key;
 static Key *SEEN; static u64 SEENMASK;
 static int seen_insert(u64 a, u64 b) {

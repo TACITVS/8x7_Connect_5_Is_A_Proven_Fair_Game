@@ -249,21 +249,34 @@ static u64 threat_cells(const Pos *p, int P) {
    3 = R3 (claimeven anchored by a defender threat).  Fills *fc,*ft for R3. */
 static int DEF;
 static int USE_R2 = 1;
+static long long r1calls = 0, r2calls = 0;
+static R2Ctx DEFAULT_R2_CTX;
+
 static int leaf_x(R2Ctx *x, const Pos *p, int *ofc, int *oft) {
   int side = p->n & 1;
   LS live = live_lines(p, DEF);
   if (!live) return 1;
+  __atomic_fetch_add(&r1calls, 1, __ATOMIC_RELAXED);
   if (r1_solve(p, (1 << W) - 1, live)) return 1;
   if (!USE_R2 || side == DEF) return 0;
   int E = NCELL - p->n;
-  if (E % 2 == 0 && r2_solve(x, p, DEF, -1, 0)) return 2;
+  if (E % 2 == 0) {
+    __atomic_fetch_add(&r2calls, 1, __ATOMIC_RELAXED);
+    if (r2_solve(x, p, DEF, -1, 0)) return 2;
+  }
   u64 th = threat_cells(p, DEF);
   while (th) {
     int i = ctz(th); th &= th - 1;
     int c = i / H1, r = i % H1;
     int Z = H - r + 1;
     if ((E - Z) % 2) continue;
+    __atomic_fetch_add(&r2calls, 1, __ATOMIC_RELAXED);
     if (r2_solve(x, p, DEF, c, r)) { if (ofc) { *ofc = c; *oft = r; } return 3; }
   }
   return 0;
 }
+
+static inline int leaf(const Pos *p) {
+  return leaf_x(&DEFAULT_R2_CTX, p, NULL, NULL);
+}
+

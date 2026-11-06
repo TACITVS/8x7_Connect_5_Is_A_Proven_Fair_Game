@@ -18,3 +18,7 @@ Print Assumptions book_step3_horizontal_parity_split.
 Print Assumptions book_step4_diagonal_parity_alternation.
 Print Assumptions book_central_wall_decomposition.
 Print Assumptions book_step5_r3_parity_law_lia.
+Print Assumptions r3_concrete_check_static_true.
+Print Assumptions r3_concrete_Static.
+Print Assumptions r3_concrete_cert_safe.
+Print Assumptions r2_concrete_black_static_safe.

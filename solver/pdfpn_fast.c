@@ -152,7 +152,7 @@ static PD child_value(Th *t, const Pos *q, int mover) {
   if (tt_get(a, b, &e)) { r.pn = e.pn; r.dn = e.dn; r.busy = e.busy; return r; }
   int lf;
   if (quick_eval(q, &r.pn, &r.dn, &lf)) { tt_put(a, b, r.pn, r.dn, 1, -1, lf, 0, 0); return r; }
-  t->leafcalls++;
+  __atomic_fetch_add(&t->leafcalls, 1, __ATOMIC_RELAXED);
   lf = leaf_x(t->rx, q, NULL, NULL);
   if (lf) { r.pn = 0; r.dn = INF; tt_put(a, b, 0, INF, 1, -1, lf, 0, 0); return r; }
   int mv[W];
@@ -183,7 +183,7 @@ static u32 mid(Th *t, const Pos *p, u32 thpn, u32 thdn, PD *out) {
     int m2; canon(&ch[i], &ck[i][0], &ck[i][1], &m2);
   }
   for (int iter = 0;; iter++) {
-    t->nodes++;
+    __atomic_fetch_add(&t->nodes, 1, __ATOMIC_RELAXED);
     if (iter)
       for (int i = 0; i < n; i++) {
         if (cv[i].pn == 0 || cv[i].dn == 0) continue;
@@ -197,7 +197,7 @@ static u32 mid(Th *t, const Pos *p, u32 thpn, u32 thdn, PD *out) {
       pn = 0; dn = INF;
       for (int i = 0; i < n; i++) { pn = sat_add(pn, cv[i].pn); if (cv[i].dn < dn) dn = cv[i].dn; }
     }
-    if (pn >= thpn || dn >= thdn || pn == 0 || dn == 0 || STOP) break;
+    if (pn >= thpn || dn >= thdn || pn == 0 || dn == 0 || __atomic_load_n(&STOP, __ATOMIC_ACQUIRE)) break;
     int b1 = -1; u64 v1 = ~0ULL, v2 = ~0ULL;
     for (int i = 0; i < n; i++) {
       u64 v = isor ? cv[i].pn : cv[i].dn;
@@ -232,10 +232,10 @@ static u32 mid(Th *t, const Pos *p, u32 thpn, u32 thdn, PD *out) {
 static Pos ROOT;
 static void *worker(void *arg) {
   Th *t = arg;
-  while (!STOP) {
+  while (!__atomic_load_n(&STOP, __ATOMIC_ACQUIRE)) {
     PD r;
     mid(t, &ROOT, INF, INF, &r);
-    if (r.pn == 0 || r.dn == 0) STOP = 1;
+    if (r.pn == 0 || r.dn == 0) __atomic_store_n(&STOP, 1, __ATOMIC_RELEASE);
   }
   return NULL;
 }
@@ -309,13 +309,16 @@ int main(int argc, char **argv) {
   double t0 = now(), last = t0;
   int PDEPTH = argc > 5 ? atoi(argv[5]) : 5;
   double hist_t[4096], hist_p[4096]; int nh = 0;
-  while (!STOP) {
+  while (!__atomic_load_n(&STOP, __ATOMIC_ACQUIRE)) {
     struct timespec ts = {0, 200000000}; nanosleep(&ts, NULL);
     double t = now();
-    if (t - last >= 10 || STOP) {
+    if (t - last >= 10 || __atomic_load_n(&STOP, __ATOMIC_ACQUIRE)) {
       last = t;
       long long nn = 0, lc = 0;
-      for (int i = 0; i < NT; i++) { nn += ctx[i].nodes; lc += ctx[i].leafcalls; }
+      for (int i = 0; i < NT; i++) {
+        nn += __atomic_load_n(&ctx[i].nodes, __ATOMIC_RELAXED);
+        lc += __atomic_load_n(&ctx[i].leafcalls, __ATOMIC_RELAXED);
+      }
       u64 a, b; int mir; canon(&ROOT, &a, &b, &mir);
       TE e; int f = tt_get(a, b, &e);
       double pr = prog(&ROOT, PDEPTH);
@@ -331,7 +334,7 @@ int main(int argc, char **argv) {
       fmt_time(el, t - t0);
       printf("%s %5.1f%%  elapsed %s  ETA %s | %.2fM nodes/s, %lld nodes, root pn=%u dn=%u\n", bb, 100 * pr, el, eta,
              nn / (t - t0) / 1e6, nn, f ? e.pn : 0, f ? e.dn : 0);
-      if (t - t0 > maxsec) { STOP = 2; break; }
+      if (t - t0 > maxsec) { __atomic_store_n(&STOP, 2, __ATOMIC_RELEASE); break; }
     }
   }
   for (int i = 0; i < NT; i++) pthread_join(th[i], NULL);

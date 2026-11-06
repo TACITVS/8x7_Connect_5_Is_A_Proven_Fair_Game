@@ -678,3 +678,141 @@ Proof.
   intros k j Hft Hle. lia.
 Qed.
 
+(** ** Concrete End-to-End Verification of [check_static = true], [check_cert_node = true], and [safe] *)
+
+(** Note on [white_27pair_struct] and [white_core10_struct]:
+    At Ply 1 ([b_open]), only 1 stone (3, 0) is on the board and 55 (odd) empty
+    cells remain. Because no 4-stone frozen threat exists yet at Ply 1, those two
+    structures demonstrate geometric 76-line blocking ([check_cover = true]).
+    Once White establishes a 4-stone threat at an odd row [ft] (Rule R3),
+    freezing the odd suffix [8 - ft] absorbs the odd cell (including (4, 6))
+    and satisfies the FULL [check_static = true] and [check_cert_node = true]
+    checker, yielding an unconditional proof of [Static] and [safe] against all
+    possible game continuations. We demonstrate this end-to-end below. *)
+
+(** Reachable board at Ply 8 (4 White stones, 4 Black stones; White to move): *)
+Definition b_ply8 : board :=
+  play (play (play (play (play (play (play (play initial
+    3 White) (* 1. White (3,0) *)
+    0 Black) (* 2. Black (0,0) *)
+    0 White) (* 3. White (0,1) *)
+    1 Black) (* 4. Black (1,0) *)
+    1 White) (* 5. White (1,1) *)
+    2 Black) (* 6. Black (2,0) *)
+    2 White) (* 7. White (2,1) *)
+    5 Black. (* 8. Black (5,0) *)
+
+(** Reachable board at Ply 9 after White plays column 3 -> (3, 1), creating a
+    4-in-a-row threat on Row 1 at (4, 1) ([ft = 1], odd row) with 47 (odd)
+    empty cells remaining and Black to move: *)
+Definition b_r3 : board := play b_ply8 3 White.
+
+(** Complete Rule-R3 defensive pairing structure at [b_r3]:
+    - [s_frozen = Some (4, 1)] freezes all 7 cells of Column 4 (including (4, 6));
+    - [s_rigid] pairs the playable cells ((0,2),(1,2)), ((2,2),(3,2)), ((6,0),(7,0));
+    - [s_strong] pairs all remaining 34 cells in Columns 0..3 and 5..7 into
+      17 vertical dominoes. *)
+Definition white_r3_full_struct : structure := {|
+  s_parity := true;
+  s_frozen := Some (4, 1);
+  s_strong :=
+    [((0,3),(0,4)); ((0,5),(0,6));
+     ((1,3),(1,4)); ((1,5),(1,6));
+     ((2,3),(2,4)); ((2,5),(2,6));
+     ((3,3),(3,4)); ((3,5),(3,6));
+     ((5,1),(5,2)); ((5,3),(5,4)); ((5,5),(5,6));
+     ((6,1),(6,2)); ((6,3),(6,4)); ((6,5),(6,6));
+     ((7,1),(7,2)); ((7,3),(7,4)); ((7,5),(7,6))];
+  s_rigid :=
+    [((0,2),(1,2)); ((2,2),(3,2)); ((6,0),(7,0))];
+  s_weak := [];
+  s_free := []
+|}.
+
+(** Two-step DAG certificate from [b_ply8] (White plays col 3 -> [b_r3], followed
+    by the verified Rule-R3 static structure leaf at [b_r3]): *)
+Definition r3_two_step_cert : certificate :=
+  [CS_DefMove 3 1; CS_Leaf white_r3_full_struct].
+
+(** Theorem 19 (Concrete Full Static Verification with Odd Empty Count = 47):
+    On the reachable 47-empty-cell board [b_r3], [check_static] (including
+    [check_wf], [check_frozen], [check_partition], [check_mode], and [check_cover])
+    and [check_cert_node] evaluate to [true]. *)
+Theorem r3_concrete_check_static_true :
+  empties b_r3 = 47 /\
+  check_static White b_r3 white_r3_full_struct = true /\
+  check_cert_node r3_two_step_cert 2 White b_ply8 White 0 = true.
+Proof.
+  vm_compute. repeat split; reflexivity.
+Qed.
+
+(** Theorem 20 (Unconditional [Static] Witness via Boolean Reflection): *)
+Theorem r3_concrete_Static :
+  Static White b_r3 white_r3_full_struct.
+Proof.
+  apply check_static_sound.
+  exact (proj1 (proj2 r3_concrete_check_static_true)).
+Qed.
+
+(** Theorem 21 (Unconditional Game-Tree Safety [safe] via Certificate Checker):
+    Proves unconditionally that White cannot lose from [b_r3] (Black to move) or
+    [b_ply8] (White to move) against any of the 8^47 possible continuations. *)
+Theorem r3_concrete_cert_safe :
+  safe White b_r3 Black /\ safe White b_ply8 White.
+Proof.
+  split.
+  - apply (structure_sound White b_r3 white_r3_full_struct r3_concrete_Static).
+  - apply (cert_sound 2 r3_two_step_cert White b_ply8 White 0).
+    exact (proj2 (proj2 r3_concrete_check_static_true)).
+Qed.
+
+(** Reachable 20-ply board [b_r2] (10 White stones, 10 Black stones; 36 empty
+    cells, EVEN; White to move, Black defending via pure Rule R2 with
+    [s_frozen = None]): *)
+Definition b_r2 : board :=
+  play (play (play (play (play (play (play (play (play (play
+  (play (play (play (play (play (play (play (play (play (play initial
+    0 White) 3 Black)
+    7 White) 4 Black)
+    1 White) 3 Black)
+    1 White) 4 Black)
+    2 White) 3 Black)
+    2 White) 4 Black)
+    5 White) 1 Black)
+    5 White) 2 Black)
+    6 White) 5 Black)
+    6 White) 6 Black.
+
+(** Complete Rule-R2 unfrozen Claimeven + Rigid-Chain structure for Black at [b_r2]: *)
+Definition black_r2_full_struct : structure := {|
+  s_parity := true;
+  s_frozen := None;
+  s_strong :=
+    [((0,1),(0,2)); ((0,3),(0,4)); ((0,5),(0,6));
+     ((3,3),(3,4)); ((3,5),(3,6));
+     ((4,3),(4,4)); ((4,5),(4,6));
+     ((7,1),(7,2)); ((7,3),(7,4)); ((7,5),(7,6))];
+  s_rigid :=
+    [((1,3),(2,3)); ((1,4),(2,4)); ((1,5),(2,5)); ((1,6),(2,6));
+     ((5,3),(6,3)); ((5,4),(6,4)); ((5,5),(6,5)); ((5,6),(6,6))];
+  s_weak := [];
+  s_free := []
+|}.
+
+(** Theorem 22 (Concrete Player-2 Unfrozen Rule-R2 [check_static = true] & [safe]):
+    On the reachable 36-empty-cell board [b_r2], [check_static Black b_r2 black_r2_full_struct]
+    evaluates to [true] with [s_frozen = None], proving [Static Black b_r2 black_r2_full_struct]
+    and [safe Black b_r2 White] unconditionally. *)
+Theorem r2_concrete_black_static_safe :
+  empties b_r2 = 36 /\
+  check_static Black b_r2 black_r2_full_struct = true /\
+  Static Black b_r2 black_r2_full_struct /\
+  safe Black b_r2 White.
+Proof.
+  assert (Hchk : empties b_r2 = 36 /\ check_static Black b_r2 black_r2_full_struct = true).
+  { vm_compute. split; reflexivity. }
+  destruct Hchk as [Hemp Hst].
+  pose proof (check_static_sound Black b_r2 black_r2_full_struct Hst) as HStatic.
+  split; [exact Hemp | split; [exact Hst | split; [exact HStatic | exact (structure_sound Black b_r2 black_r2_full_struct HStatic)]]].
+Qed.
+

@@ -5,6 +5,7 @@
 #include <string.h>
 #include <time.h>
 #include <vector>
+#include <algorithm>
 #include <iostream>
 #include <chrono>
 
@@ -82,20 +83,60 @@ __host__ __device__ inline bool has_won_5(u64 s) {
     return false;
 }
 
+static inline u64 splitmix64(u64 *state) {
+    u64 z = (*state += 0x9E3779B97F4A7C15ULL);
+    z = (z ^ (z >> 30)) * 0xBF58476D1CE4E5B9ULL;
+    z = (z ^ (z >> 27)) * 0x94D049BB133111EBULL;
+    return z ^ (z >> 31);
+}
+
+// Generate a legal, non-terminal reachable Connect-5 board using SplitMix64
+static inline void generate_legal_board(u64 seed, u64 *out_w, u64 *out_b, i8 *out_mover) {
+    u64 rng = splitmix64(&seed);
+    u64 w = 0, b = 0;
+    int heights[8] = {0};
+    int target_moves = 10 + (int)(splitmix64(&rng) % 31); // 10..40 plies
+    int actual_moves = 0;
+
+    for (int m = 0; m < target_moves; m++) {
+        int start_c = (int)(splitmix64(&rng) & 7ULL);
+        int chosen_c = -1;
+        for (int off = 0; off < 8; off++) {
+            int c = (start_c + off) & 7;
+            if (heights[c] < 7) {
+                u64 bit = 1ULL << (c * 8 + heights[c]);
+                u64 next_s = ((actual_moves & 1) == 0) ? (w | bit) : (b | bit);
+                if (!has_won_5(next_s)) {
+                    chosen_c = c;
+                    break;
+                }
+            }
+        }
+        if (chosen_c < 0) break;
+        u64 bit = 1ULL << (chosen_c * 8 + heights[chosen_c]++);
+        if ((actual_moves & 1) == 0) w |= bit;
+        else b |= bit;
+        actual_moves++;
+    }
+    *out_w = w;
+    *out_b = b;
+    *out_mover = (i8)(actual_moves & 1);
+}
+
 // GPU Evaluation Result Structure
 struct EvalResult {
-    i8 score;       // 1 = Win, -1 = Loss (opponent wins/has double win), 0 = Inconclusive
+    i8 score;       // 1 = Win in 1, -1 = Loss (opponent has >=2 winning threats), 0 = Non-terminal tactical score
     i8 best_col;    // Best recommended move
     i8 num_moves;   // Number of valid moves
     i8 pad;
     i8 col_scores[8]; // Relative scores of moves 0..7 (-128 if illegal/blunder)
 };
 
-// Massively parallel evaluation kernel for N positions
+// Massively parallel 1-ply/2-ply tactical threat & blunder evaluator kernel
 __global__ void eval_batch_kernel(
     const u64 *d_white,
     const u64 *d_black,
-    int mover, // 0 = White, 1 = Black
+    const i8 *d_mover, // 0 = White, 1 = Black (per position)
     EvalResult *d_results,
     int n
 ) {
@@ -104,6 +145,7 @@ __global__ void eval_batch_kernel(
 
     u64 w = d_white[idx];
     u64 b = d_black[idx];
+    int mover = (int)d_mover[idx];
     u64 mask = w | b;
 
     u64 my_stones = (mover == 0) ? w : b;
@@ -113,23 +155,20 @@ __global__ void eval_batch_kernel(
     res.score = 0;
     res.best_col = -1;
     res.num_moves = 0;
+    res.pad = (i8)mover;
     for (int c = 0; c < 8; c++) res.col_scores[c] = -128;
 
-    // Check if opponent already won
     if (has_won_5(opp_stones)) {
         res.score = -1;
         d_results[idx] = res;
         return;
     }
-
-    // Check if mover already won
     if (has_won_5(my_stones)) {
         res.score = 1;
         d_results[idx] = res;
         return;
     }
 
-    // Find playable cells
     int my_win_col = -1;
     int opp_win_count = 0;
     int opp_must_block_col = -1;
@@ -142,11 +181,7 @@ __global__ void eval_batch_kernel(
         landings[c] = land;
         if (land) {
             res.num_moves++;
-            // Check if mover wins immediately
-            if (has_won_5(my_stones | land)) {
-                my_win_col = c;
-            }
-            // Check if opponent would win immediately by playing here
+            if (has_won_5(my_stones | land)) my_win_col = c;
             if (has_won_5(opp_stones | land)) {
                 opp_win_count++;
                 opp_must_block_col = c;
@@ -154,7 +189,6 @@ __global__ void eval_batch_kernel(
         }
     }
 
-    // If mover can win in 1 move -> WIN
     if (my_win_col >= 0) {
         res.score = 1;
         res.best_col = my_win_col;
@@ -163,14 +197,12 @@ __global__ void eval_batch_kernel(
         return;
     }
 
-    // If opponent has 2 or more winning moves -> LOSS (mover cannot block both)
     if (opp_win_count >= 2) {
         res.score = -1;
         d_results[idx] = res;
         return;
     }
 
-    // Score all legal moves
     int best_score = -999;
     int best_c = -1;
 
@@ -178,21 +210,18 @@ __global__ void eval_batch_kernel(
         u64 land = landings[c];
         if (!land) continue;
 
-        // If opponent has 1 winning move, mover MUST block it
         if (opp_win_count == 1 && c != opp_must_block_col) {
             res.col_scores[c] = -100;
             continue;
         }
 
-        // Blunder filter: check if playing here allows opponent to win on top
         u64 next_land = (land << 1) & COLMASK(c);
         if (next_land && has_won_5(opp_stones | next_land)) {
-            res.col_scores[c] = -50; // Major blunder: gives opponent instant win!
+            res.col_scores[c] = -50;
             continue;
         }
 
         int score = 0;
-        // Center column preference (columns 3 and 4 are center)
         if (c == 3 || c == 4) score += 6;
         else if (c == 2 || c == 5) score += 4;
         else if (c == 1 || c == 6) score += 2;
@@ -208,9 +237,8 @@ __global__ void eval_batch_kernel(
     d_results[idx] = res;
 }
 
-// Host benchmark function
 int main() {
-    printf("Initializing Connect-5 GPU Engine on RTX 4060...\n");
+    printf("Initializing Connect-5 Bitboard Tactical Evaluator on GPU...\n");
     init_lines();
 
     int dev = 0;
@@ -221,67 +249,89 @@ int main() {
            prop.name, prop.multiProcessorCount, prop.major, prop.minor,
            (double)prop.totalGlobalMem / (1024*1024*1024));
 
-    // Allocate batch memory
-    const int N = 262144; // 256K positions
-    u64 *h_white = (u64*)malloc(N * sizeof(u64));
-    u64 *h_black = (u64*)malloc(N * sizeof(u64));
-    EvalResult *h_results = (EvalResult*)malloc(N * sizeof(EvalResult));
+    // Part 1: 262,144-position validation & distinctness check
+    const int N_CHECK = 262144;
+    std::vector<u64> h_w(N_CHECK), h_b(N_CHECK);
+    std::vector<i8> h_m(N_CHECK);
+    std::vector<std::pair<u64, u64>> pairs(N_CHECK);
 
-    // Generate random positions
-    for (int i = 0; i < N; i++) {
-        h_white[i] = 0;
-        h_black[i] = 0;
-        int moves = 2 + (i % 20);
-        int heights[8] = {0};
-        for (int m = 0; m < moves; m++) {
-            int c = (i * 7 + m * 11) % 8;
-            if (heights[c] < 7) {
-                u64 bit = 1ULL << (c * 8 + heights[c]++);
-                if (m % 2 == 0) h_white[i] |= bit;
-                else h_black[i] |= bit;
-            }
-        }
+    int wrong_mover_count = 0;
+    for (int i = 0; i < N_CHECK; i++) {
+        generate_legal_board((u64)i + 1ULL, &h_w[i], &h_b[i], &h_m[i]);
+        pairs[i] = {h_w[i], h_b[i]};
+        u64 msk = h_w[i] | h_b[i];
+        int pop = 0;
+        while (msk) { msk &= msk - 1; pop++; }
+        if ((pop & 1) != h_m[i]) wrong_mover_count++;
+    }
+    std::sort(pairs.begin(), pairs.end());
+    size_t distinct_count = std::unique(pairs.begin(), pairs.end()) - pairs.begin();
+    printf("Generated %d legal boards: %zu distinct (%.2f%%), wrong_mover = %d\n",
+           N_CHECK, distinct_count, 100.0 * (double)distinct_count / N_CHECK, wrong_mover_count);
+
+    // Part 2: 4,194,304-position x 25-iteration throughput benchmark (104,857,600 tactical evaluations)
+    const int N_BENCH = 4194304;
+    const int ITERS = 25;
+    u64 *h_bw = (u64*)malloc(N_BENCH * sizeof(u64));
+    u64 *h_bb = (u64*)malloc(N_BENCH * sizeof(u64));
+    i8 *h_bm = (i8*)malloc(N_BENCH * sizeof(i8));
+    EvalResult *h_results = (EvalResult*)malloc(N_BENCH * sizeof(EvalResult));
+
+    for (int i = 0; i < N_BENCH; i++) {
+        generate_legal_board((u64)i + 1ULL, &h_bw[i], &h_bb[i], &h_bm[i]);
     }
 
     u64 *d_white, *d_black;
+    i8 *d_mover;
     EvalResult *d_results;
-    cudaMalloc(&d_white, N * sizeof(u64));
-    cudaMalloc(&d_black, N * sizeof(u64));
-    cudaMalloc(&d_results, N * sizeof(EvalResult));
+    cudaMalloc(&d_white, N_BENCH * sizeof(u64));
+    cudaMalloc(&d_black, N_BENCH * sizeof(u64));
+    cudaMalloc(&d_mover, N_BENCH * sizeof(i8));
+    cudaMalloc(&d_results, N_BENCH * sizeof(EvalResult));
 
-    cudaMemcpy(d_white, h_white, N * sizeof(u64), cudaMemcpyHostToDevice);
-    cudaMemcpy(d_black, h_black, N * sizeof(u64), cudaMemcpyHostToDevice);
-
-    printf("Benchmarking GPU Batch Evaluator on %d positions...\n", N);
-    auto t0 = std::chrono::high_resolution_clock::now();
+    cudaMemcpy(d_white, h_bw, N_BENCH * sizeof(u64), cudaMemcpyHostToDevice);
+    cudaMemcpy(d_black, h_bb, N_BENCH * sizeof(u64), cudaMemcpyHostToDevice);
+    cudaMemcpy(d_mover, h_bm, N_BENCH * sizeof(i8), cudaMemcpyHostToDevice);
 
     int threads = 256;
-    int blocks = (N + threads - 1) / threads;
-    eval_batch_kernel<<<blocks, threads>>>(d_white, d_black, 0, d_results, N);
+    int blocks = (N_BENCH + threads - 1) / threads;
+
+    // Warmup launch
+    eval_batch_kernel<<<blocks, threads>>>(d_white, d_black, d_mover, d_results, N_BENCH);
     cudaDeviceSynchronize();
 
+    printf("Benchmarking GPU Tactical Evaluator (%d threads x %d iterations = %lld evaluations)...\n",
+           N_BENCH, ITERS, (long long)N_BENCH * ITERS);
+    auto t0 = std::chrono::high_resolution_clock::now();
+    for (int it = 0; it < ITERS; it++) {
+        eval_batch_kernel<<<blocks, threads>>>(d_white, d_black, d_mover, d_results, N_BENCH);
+    }
+    cudaDeviceSynchronize();
     auto t1 = std::chrono::high_resolution_clock::now();
-    double el = std::chrono::duration<double>(t1 - t0).count();
+    double ms = std::chrono::duration<double, std::milli>(t1 - t0).count();
 
-    cudaMemcpy(h_results, d_results, N * sizeof(EvalResult), cudaMemcpyDeviceToHost);
+    cudaMemcpy(h_results, d_results, N_BENCH * sizeof(EvalResult), cudaMemcpyDeviceToHost);
 
-    int wins = 0, losses = 0, inconc = 0;
-    for (int i = 0; i < N; i++) {
+    int wins = 0, losses = 0, neutral = 0;
+    for (int i = 0; i < N_BENCH; i++) {
         if (h_results[i].score == 1) wins++;
         else if (h_results[i].score == -1) losses++;
-        else inconc++;
+        else neutral++;
     }
 
-    printf("Evaluation complete in %.3f ms!\n", el * 1000.0);
-    printf("Throughput: %.2f MILLION positions/second!\n", (N / el) / 1e6);
-    printf("Wins: %d, Losses: %d, Inconclusive: %d\n", wins, losses, inconc);
+    double total_evals = (double)N_BENCH * ITERS;
+    printf("GPU Execution Time: %.3f ms\n", ms);
+    printf("Throughput: %.2f Million tactical board evaluations / second\n", (total_evals / (ms / 1000.0)) / 1e6);
+    printf("Batch Results (%d boards): Wins-in-1=%d, Double-Threat-Losses=%d, Tactical-Neutral=%d\n",
+           N_BENCH, wins, losses, neutral);
 
     cudaFree(d_white);
     cudaFree(d_black);
+    cudaFree(d_mover);
     cudaFree(d_results);
-    free(h_white);
-    free(h_black);
+    free(h_bw);
+    free(h_bb);
+    free(h_bm);
     free(h_results);
-
     return 0;
 }

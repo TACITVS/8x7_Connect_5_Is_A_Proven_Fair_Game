@@ -1,16 +1,18 @@
 #include <cuda_runtime.h>
 #include <stdio.h>
 #include <stdint.h>
+#include <stdlib.h>
 
 #define W 8
 #define H 7
 #define K 5
+#define NL 76
 #define FULL_MASK 0x7F7F7F7F7F7F7F7FULL
-#define BOTTOM_MASK 0x0101010101010101ULL
+#define BIT(c, r) (1ULL << ((c) * 8 + (r)))
 
 typedef unsigned long long u64;
 
-__device__ inline bool has_won_5(u64 s) {
+__host__ __device__ inline bool has_won_5(u64 s) {
     u64 m;
     // Vertical (shift 1)
     m = s & (s >> 1);
@@ -27,26 +29,92 @@ __device__ inline bool has_won_5(u64 s) {
     return false;
 }
 
-// 76 winning lines stored in GPU constant memory
-__constant__ u64 d_LINES[76];
+__constant__ u64 d_LINES[NL];
+static u64 h_LINES[NL];
 
-__global__ void test_kernel(int *out) {
-    int tid = threadIdx.x;
-    u64 s = 0;
-    // Test 5 vertical pieces in col 0
-    for (int r = 0; r < 5; r++) s |= (1ULL << r);
-    bool won = has_won_5(s);
-    if (tid == 0) out[0] = won ? 1 : 0;
+void init_lines() {
+    int nl = 0;
+    for (int r = 0; r < H; r++)
+        for (int c = 0; c <= W - K; c++) {
+            u64 m = 0;
+            for (int i = 0; i < K; i++) m |= BIT(c + i, r);
+            h_LINES[nl++] = m;
+        }
+    for (int c = 0; c < W; c++)
+        for (int r = 0; r <= H - K; r++) {
+            u64 m = 0;
+            for (int i = 0; i < K; i++) m |= BIT(c, r + i);
+            h_LINES[nl++] = m;
+        }
+    for (int c = 0; c <= W - K; c++)
+        for (int r = 0; r <= H - K; r++) {
+            u64 m = 0;
+            for (int i = 0; i < K; i++) m |= BIT(c + i, r + i);
+            h_LINES[nl++] = m;
+        }
+    for (int c = 0; c <= W - K; c++)
+        for (int r = K - 1; r < H; r++) {
+            u64 m = 0;
+            for (int i = 0; i < K; i++) m |= BIT(c + i, r - i);
+            h_LINES[nl++] = m;
+        }
+    cudaMemcpyToSymbol(d_LINES, h_LINES, sizeof(h_LINES));
+}
+
+__device__ inline u64 splitmix64_dev(u64 x) {
+    x += 0x9E3779B97F4A7C15ULL;
+    x = (x ^ (x >> 30)) * 0xBF58476D1CE4E5B9ULL;
+    x = (x ^ (x >> 27)) * 0x94D049BB133111EBULL;
+    return x ^ (x >> 31);
+}
+
+__global__ void verify_detector_kernel(int n_random, int *d_errors) {
+    int idx = blockIdx.x * blockDim.x + threadIdx.x;
+
+    // 1. Thread 0..75: verify all 76 winning lines and all 380 4-stone near misses
+    if (idx < NL) {
+        u64 mask = d_LINES[idx];
+        if (!has_won_5(mask)) atomicAdd(d_errors, 1);
+        for (int bit = 0; bit < 64; bit++) {
+            u64 b = 1ULL << bit;
+            if (mask & b) {
+                if (has_won_5(mask ^ b)) atomicAdd(d_errors, 1);
+            }
+        }
+    }
+
+    // 2. Thread 0..n_random-1: compare shift detector vs 76-line table on random boards
+    if (idx < n_random) {
+        u64 s = splitmix64_dev((u64)idx + 1ULL) & FULL_MASK;
+        bool shift_res = has_won_5(s);
+        bool enum_res = false;
+        for (int l = 0; l < NL; l++) {
+            if ((s & d_LINES[l]) == d_LINES[l]) {
+                enum_res = true;
+                break;
+            }
+        }
+        if (shift_res != enum_res) atomicAdd(d_errors, 1);
+    }
 }
 
 int main() {
-    int *d_out;
-    cudaMalloc(&d_out, sizeof(int));
-    test_kernel<<<1, 32>>>(d_out);
+    init_lines();
+    const int N_RANDOM = 100000;
+    int *d_errors;
+    cudaMalloc(&d_errors, sizeof(int));
+    cudaMemset(d_errors, 0, sizeof(int));
+
+    int threads = 256;
+    int blocks = (N_RANDOM + threads - 1) / threads;
+    verify_detector_kernel<<<blocks, threads>>>(N_RANDOM, d_errors);
     cudaDeviceSynchronize();
-    int h_out = 0;
-    cudaMemcpy(&h_out, d_out, sizeof(int), cudaMemcpyDeviceToHost);
-    printf("GPU Test Result: %d (expected 1)\n", h_out);
-    cudaFree(d_out);
-    return 0;
+
+    int h_errors = -1;
+    cudaMemcpy(&h_errors, d_errors, sizeof(int), cudaMemcpyDeviceToHost);
+    cudaFree(d_errors);
+
+    printf("GPU Win-Detector Verification (76 lines, 380 near-misses, %d random bitboards): errors = %d (expected 0)\n",
+           N_RANDOM, h_errors);
+    return (h_errors == 0) ? 0 : 1;
 }
