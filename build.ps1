@@ -43,12 +43,12 @@ if ($joined -match "Axioms:") {
     Write-Error "Verification failed: unexpected Axioms reported by CheckAssumptions.v!"
     exit 1
 }
-if ($closedMatches -ne 22) {
-    Write-Error "Verification failed: expected 22 'Closed under the global context' reports, got $closedMatches"
+if ($closedMatches -ne 24) {
+    Write-Error "Verification failed: expected 24 'Closed under the global context' reports, got $closedMatches"
     exit 1
 }
 
-Write-Host "`nAll 6 foundational theory files and all 22 theorems verified (" -NoNewline -ForegroundColor Cyan
-Write-Host "$closedMatches/22 Closed under the global context, 0 Axioms, 0 Admits" -NoNewline -ForegroundColor Green
+Write-Host "`nAll 6 foundational theory files and all 24 theorems verified (" -NoNewline -ForegroundColor Cyan
+Write-Host "$closedMatches/24 Closed under the global context, 0 Axioms, 0 Admits" -NoNewline -ForegroundColor Green
 Write-Host ")!" -ForegroundColor Cyan
 

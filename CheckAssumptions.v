@@ -22,3 +22,6 @@ Print Assumptions r3_concrete_check_static_true.
 Print Assumptions r3_concrete_Static.
 Print Assumptions r3_concrete_cert_safe.
 Print Assumptions r2_concrete_black_static_safe.
+Print Assumptions c4_7x6_claimeven_57_of_69_and_center3_cover.
+Print Assumptions c4_7x6_book_theorems_lia.
+

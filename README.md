@@ -1,8 +1,9 @@
 # Formal Mathematical Proof: Connect-5 on an 8x7 Board with Gravity is a Fair Game
 
-[![Rocq 9.1 Verified](https://img.shields.io/badge/Rocq%209.1-22%20Theorems%20Verified%20(0%20Axioms)-success.svg?style=for-the-badge&logo=coq)](CheckAssumptions.v)
-[![Lean 4.35.0 Verified](https://img.shields.io/badge/Lean%204.35.0-14%20Hand--Proof%20Theorems%20(0%20Sorrys)-10b981.svg?style=for-the-badge)](lean4/Connect5HandProof.lean)
+[![Rocq 9.1 Verified](https://img.shields.io/badge/Rocq%209.1-24%20Theorems%20Verified%20(0%20Axioms)-success.svg?style=for-the-badge&logo=coq)](CheckAssumptions.v)
+[![Lean 4.35.0 Verified](https://img.shields.io/badge/Lean%204.35.0-18%20Hand--Proof%20Theorems%20(0%20Sorrys)-10b981.svg?style=for-the-badge)](lean4/Connect5HandProof.lean)
 [![Technical Audit Verified](https://img.shields.io/badge/🛡️%20Audit%20Verified-11%2F11%20GPT--6.1%20Findings%20Resolved-0ea5e9.svg?style=for-the-badge)](TECHNICAL_AUDIT_RESPONSE.md)
+[![Classic Connect-4 Appendix](https://img.shields.io/badge/🎲%20New%20Appendix-Classic%207x6%20Connect--4%20Book%20Theorems-ec4899.svg?style=for-the-badge)](APPENDIX_CLASSIC_CONNECT4_7x6.md)
 [![Game Theory Status](https://img.shields.io/badge/Game%20Theoretic%20Value-Draw%20(Fair)-blue.svg?style=for-the-badge)](C5Certificate.v)
 [![Historical Monograph](https://img.shields.io/badge/📜%20Must%20Read-38--Year%20Historical%20%26%20Literature%20Audit-f59e0b.svg?style=for-the-badge)](HISTORICAL_AND_LITERATURE_ANALYSIS.md)
 [![Follow-Up Paper II](https://img.shields.io/badge/📖%20New%20Paper%20II-Hilbert--Erdős%20Pen--and--Paper%20Proof%20%26%20Lisp-8b5cf6.svg?style=for-the-badge)](HILBERT_ERDOS_PEN_AND_PAPER_PROOF.md)
@@ -10,7 +11,7 @@
 [![Clang 23 Optimized](https://img.shields.io/badge/Compiler-Clang%2023%20%7C%20GCC%2015-orange.svg?style=for-the-badge&logo=llvm)](solver/pdfpn_fast.c)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge)](LICENSE)
 
-> **Abstract:** In combinatorial game theory, determining the exact game-theoretic value of positional games with gravity on asymmetric boards presents severe computational and deductive barriers. While standard Connect-Four (7 × 6, 4-in-a-row) is a known first-player win (Victor Allis & James D. Allen, 1988), extending the connection target to 5-in-a-row on an 8 × 7 grid restores game-theoretic equilibrium. We present a formal mathematical proof framework in **Rocq 9.1 (Coq)** and **Lean 4.35.0** for **Connect-5 on an 8 × 7 board with gravity** (`game_value = Draw`). All **22 Rocq 9.1 theorems** ([`CheckAssumptions.v`](CheckAssumptions.v)) and **14 Lean 4.35.0 theorems** ([`lean4/Connect5HandProof.lean`](lean4/Connect5HandProof.lean)) are 100% machine-checked with **zero unproven axioms and zero admits/sorrys**, combining: (1) a 1,160-line unconditional deductive mechanization of Victor Allis's pairing theory (`structure_sound` in [`C5Rules.v`](C5Rules.v)), (2) unconditional concrete midgame Rule-R3 and Rule-R2 certificates proving `check_static = true`, `Static`, and full game-tree `safe` across `8^47` and `8^36` continuations (`r3_concrete_cert_safe`, `r2_concrete_black_static_safe` in [`C5CertChecker.v`](C5CertChecker.v)), (3) conditional root game-value reductions (`connect5_8x7_fair`, `cert_fair`), (4) **Follow-Up Paper II** presenting the **Hilbert–Zermelo–Erdős & Central Wall pen-and-paper proof** ([`HILBERT_ERDOS_PEN_AND_PAPER_PROOF.md`](HILBERT_ERDOS_PEN_AND_PAPER_PROOF.md)), and (5) a verified **CUDA 13.5 (`sm_89`)** bitboard tactical engine and C11 parallel `df-pn` pairing solver ([`TECHNICAL_AUDIT_RESPONSE.md`](TECHNICAL_AUDIT_RESPONSE.md)).
+> **Abstract:** In combinatorial game theory, determining the exact game-theoretic value of positional games with gravity on asymmetric boards presents severe computational and deductive barriers. While standard Connect-Four (7 × 6, 4-in-a-row) is a known first-player win (Victor Allis & James D. Allen, 1988), extending the connection target to 5-in-a-row on an 8 × 7 grid restores game-theoretic equilibrium. We present a formal mathematical proof framework in **Rocq 9.1 (Coq)** and **Lean 4.35.0** for **Connect-5 on an 8 × 7 board with gravity** (`game_value = Draw`). All **24 Rocq 9.1 theorems** ([`CheckAssumptions.v`](CheckAssumptions.v)) and **18 Lean 4.35.0 theorems** ([`lean4/Connect5HandProof.lean`](lean4/Connect5HandProof.lean)) are 100% machine-checked with **zero unproven axioms and zero admits/sorrys**, combining: (1) a 1,160-line unconditional deductive mechanization of Victor Allis's pairing theory (`structure_sound` in [`C5Rules.v`](C5Rules.v)), (2) unconditional concrete midgame Rule-R3 and Rule-R2 certificates proving `check_static = true`, `Static`, and full game-tree `safe` across `8^47` and `8^36` continuations (`r3_concrete_cert_safe`, `r2_concrete_black_static_safe` in [`C5CertChecker.v`](C5CertChecker.v)), (3) conditional root game-value reductions (`connect5_8x7_fair`, `cert_fair`), (4) **Follow-Up Paper II** presenting the **Hilbert–Zermelo–Erdős & Central Wall pen-and-paper proof** ([`HILBERT_ERDOS_PEN_AND_PAPER_PROOF.md`](HILBERT_ERDOS_PEN_AND_PAPER_PROOF.md)), (5) the **Classic 7 × 6 Connect-Four Book Theorems** ([`APPENDIX_CLASSIC_CONNECT4_7x6.md`](APPENDIX_CLASSIC_CONNECT4_7x6.md)), and (6) a verified **CUDA 13.5 (`sm_89`)** bitboard tactical engine and C11 parallel `df-pn` pairing solver ([`TECHNICAL_AUDIT_RESPONSE.md`](TECHNICAL_AUDIT_RESPONSE.md)).
 
 ---
 
@@ -23,7 +24,9 @@
 >   <h3>
 >     <a href="HISTORICAL_AND_LITERATURE_ANALYSIS.md">📜 Read the Full Monograph: <code>HISTORICAL_AND_LITERATURE_ANALYSIS.md</code></a>
 >     &nbsp;|&nbsp;
->     <a href="TECHNICAL_AUDIT_RESPONSE.md">🛡️ Read the GPT-6.1 Audit Resolution: <code>TECHNICAL_AUDIT_RESPONSE.md</code> ➔</a>
+>     <a href="TECHNICAL_AUDIT_RESPONSE.md">🛡️ Read the GPT-6.1 Audit Resolution: <code>TECHNICAL_AUDIT_RESPONSE.md</code></a>
+>     &nbsp;|&nbsp;
+>     <a href="APPENDIX_CLASSIC_CONNECT4_7x6.md">🎲 Read the Classic 7x6 Connect-4 Appendix ➔</a>
 >   </h3>
 > </div>
 
@@ -37,12 +40,14 @@
 > ### 💎 NEW — Follow-Up Paper II & Dual Rocq 9.1 / Lean 4.35.0 "Book Proof": How Would David Hilbert & Paul Erdős Prove 8×7 Connect-5 Fairness on a Single Napkin?
 > Suppose you had **no computer, no GPU, and no `vm_compute` list enumeration**—what is the cleanest, most elementary pen-and-paper proof ("from THE BOOK") of our combinatorial & parity theorems, and how do **Rocq 9.1 (`lia`)**, **Lean 4.35.0 (`omega`)**, and **untyped Common Lisp (`ACL2` & homoiconic macros)** verify it?
 > - **The 2-Column "Central Wall" Book Proof (`Col 3` Even + `Col 4` Odd):** Every non-vertical 5-line on an 8-column board crosses **both Column 3 and Column 4**. Because White owns all **even** rows `{0,2,4,6}` in Column 3 and all **odd** rows `{1,3,5}` in Column 4 (`central_wall_7cells`), the Central Wall alone blocks **all 28 horizontal lines** AND **double-blocks all 12 in-phase diagonal lines** (`40` of `52` lines!), while the remaining **12 out-of-phase diagonals** have even rows at every even column and hit `{2,4,6}` in Column 2 or Column 6!
-> - **100% Constructive Formalization in Both Rocq 9.1 (`C5CertChecker.v`) & Lean 4.35.0 (`lean4/Connect5HandProof.lean`):** All **22 Rocq 9.1 theorems** and **14 Lean 4.35.0 theorems** are verified with **ZERO `sorry`s, ZERO custom axioms, and ZERO uses of `Classical.choice`**!
+> - **100% Constructive Formalization in Both Rocq 9.1 (`C5CertChecker.v`) & Lean 4.35.0 (`lean4/Connect5HandProof.lean`):** All **24 Rocq 9.1 theorems** and **18 Lean 4.35.0 theorems** are verified with **ZERO `sorry`s, ZERO custom axioms, and ZERO uses of `Classical.choice`**!
 > <div align="center">
 >   <h3>
 >     <a href="HILBERT_ERDOS_PEN_AND_PAPER_PROOF.md">📘 Read Follow-Up Paper II (<code>HILBERT_ERDOS_PEN_AND_PAPER_PROOF.md</code>)</a>
 >     &nbsp;|&nbsp;
->     <a href="lean4/Connect5HandProof.lean">💎 Inspect the Lean 4.35.0 Hand Proof (<code>lean4/Connect5HandProof.lean</code>) ➔</a>
+>     <a href="lean4/Connect5HandProof.lean">💎 Inspect the Lean 4.35.0 Hand Proof (<code>lean4/Connect5HandProof.lean</code>)</a>
+>     &nbsp;|&nbsp;
+>     <a href="APPENDIX_CLASSIC_CONNECT4_7x6.md">🎲 Inspect the Classic 7x6 Connect-4 Appendix (<code>APPENDIX_CLASSIC_CONNECT4_7x6.md</code>) ➔</a>
 >   </h3>
 >   <p>
 >     <a href="paper/connect5_8x7_hilbert_erdos_AMS.pdf"><b>📕 Download Paper II (AMS PDF)</b></a>
@@ -168,14 +173,14 @@ Connect5_8x7/
 ├── C5Board.v          # Monotonic board extension, column gravity drops
 ├── C5Principle.v      # Follow-up principle via well-founded induction on empty cells
 ├── C5Rules.v          # Deductive soundness of Allis pairing structures (structure_sound)
-├── C5Certificate.v    # Strategy trees, minimax duality, mutual safety draw theorem
-├── C5CertChecker.v    # Verified reflection checker + 15 structural, parity, Book Proof & R3/R2 theorems
-└── CheckAssumptions.v # Assumption inspection script verifying all 22 theorems have 0 axioms
+├── C5Certificate.v    # Strategy trees, minimax duality, main game fairness
+├── C5CertChecker.v    # Verified reflection checker + 17 structural, parity, Book Proof, R3/R2 & C4 theorems
+└── CheckAssumptions.v # Assumption inspection script verifying all 24 theorems have 0 axioms
 ```
 
-### All 22 Machine-Checked Theorems Verified by [`CheckAssumptions.v`](CheckAssumptions.v)
+### All 24 Machine-Checked Theorems Verified by [`CheckAssumptions.v`](CheckAssumptions.v)
 
-> **Scope Note (See [`TECHNICAL_AUDIT_RESPONSE.md`](TECHNICAL_AUDIT_RESPONSE.md)):** Theorems **1–3** and **5–6** are **unconditional universal soundness theorems** (`Static -> safe`, `valid_strategy -> safe`, `check_cert_node = true -> safe`, `safe White /\ safe Black -> Draw`). Theorems **8–18** are **unconditional combinatorial, Central Wall & parity theorems** on the `8 × 7` board. Theorems **19–22** are **unconditional concrete midgame `check_static = true`, `Static`, and full game-tree `safe` theorems** across `8^47` (Rule R3) and `8^36` (Rule R2) continuations. Theorems **4** (`connect5_8x7_fair`) and **7** (`cert_fair`) are **conditional root reductions** proving that *given* root strategy certificates for White (after `c0`) and Black (from `initial`), `game_value = Draw`.
+> **Scope Note (See [`TECHNICAL_AUDIT_RESPONSE.md`](TECHNICAL_AUDIT_RESPONSE.md)):** Theorems **1–3** and **5–6** are **unconditional universal soundness theorems** (`Static -> safe`, `valid_strategy -> safe`, `check_cert_node = true -> safe`, `safe White /\ safe Black -> Draw`). Theorems **8–18** are **unconditional combinatorial, Central Wall & parity theorems** on the `8 × 7` board. Theorems **19–22** are **unconditional concrete midgame `check_static = true`, `Static`, and full game-tree `safe` theorems** across `8^47` (Rule R3) and `8^36` (Rule R2) continuations. Theorems **23–24** are **unconditional Classic 7 × 6 Connect-Four Book Theorems** ([`APPENDIX_CLASSIC_CONNECT4_7x6.md`](APPENDIX_CLASSIC_CONNECT4_7x6.md)). Theorems **4** (`connect5_8x7_fair`) and **7** (`cert_fair`) are **conditional root reductions** proving that *given* root strategy certificates for White (after `c0`) and Black (from `initial`), `game_value = Draw`.
 
 | # | Theorem Identifier | File | Formal Statement Verified (`Closed under the global context`) |
 | :-: | :--- | :--- | :--- |
@@ -201,24 +206,26 @@ Connect5_8x7/
 | **20** | [`r3_concrete_Static`](C5CertChecker.v#L755) | `C5CertChecker.v` | `Static White b_r3 white_r3_full_struct` (Full 13-clause Rule-R3 invariant on 47-empty-cell board) |
 | **21** | [`r3_concrete_cert_safe`](C5CertChecker.v#L763) | `C5CertChecker.v` | `safe White b_r3 Black /\ safe White b_ply8 White` *(Unconditional game-tree safety across `8^47` continuations!)* |
 | **22** | [`r2_concrete_black_static_safe`](C5CertChecker.v#L812) | `C5CertChecker.v` | `empties b_r2 = 36 /\ check_static Black b_r2 black_r2_full_struct = true /\ Static Black b_r2 black_r2_full_struct /\ safe Black b_r2 White` |
+| **23** | [`c4_7x6_claimeven_57_of_69_and_center3_cover`](C5CertChecker.v#L859) | `C5CertChecker.v` | `length lines_7x6_c4 = 69`, `O_21` kills `57/69` lines (`45/45` V/D double-blocked), `E_center ∪ O_21` covers `69/69` |
+| **24** | [`c4_7x6_book_theorems_lia`](C5CertChecker.v#L875) | `C5CertChecker.v` | Classic 7x6 C4 Presburger `lia` theorems: vertical double-block, Center-3 Pigeonhole, and Odd-Threat Zugzwang |
 
 ### Zero Axioms Verified (`CheckAssumptions.v`)
-Running `powershell -ExecutionPolicy Bypass -File .\build.ps1` compiles all 6 proof files and programmatically asserts that all **22 theorems** report `Closed under the global context` with **zero axioms**:
+Running `powershell -ExecutionPolicy Bypass -File .\build.ps1` compiles all 6 proof files and programmatically asserts that all **24 theorems** report `Closed under the global context` with **zero axioms**:
 ```text
 Compiling CheckAssumptions.v...
-  Verified: 22/22 theorems 'Closed under the global context' (0 Axioms, 0 Admits)
+  Verified: 24/24 theorems 'Closed under the global context' (0 Axioms, 0 Admits)
  OK (2.25s)
 ```
 
 ---
 
-## 💎 Analytic Hand-Proof Formalization & 14 Constructive Theorems (Lean 4.35.0)
+## 💎 Analytic Hand-Proof Formalization & 18 Constructive Theorems (Lean 4.35.0)
 
-In [`lean4/Connect5HandProof.lean`](lean4/Connect5HandProof.lean) (companion to **[Follow-Up Paper II](HILBERT_ERDOS_PEN_AND_PAPER_PROOF.md)**), we also formalize the **Hilbert–Zermelo–Erdős & Central Wall pen-and-paper proof** in **Lean 4.35.0** (`leanprover/lean4:v4.35.0`) over affine line equations on `ℤ` (`rowAt r4 s c = r4 + s * (c - 4)`)—with **zero `sorry`s, zero custom axioms, and zero uses of `Classical.choice`**!
+In [`lean4/Connect5HandProof.lean`](lean4/Connect5HandProof.lean) (companion to **[Follow-Up Paper II](HILBERT_ERDOS_PEN_AND_PAPER_PROOF.md)** and **[Appendix Note](APPENDIX_CLASSIC_CONNECT4_7x6.md)**), we also formalize the **Hilbert–Zermelo–Erdős & Central Wall pen-and-paper proof** and the **Classic 7 × 6 Connect-Four Book Theorems** in **Lean 4.35.0** (`leanprover/lean4:v4.35.0`) over affine line equations on `ℤ` (`rowAt r4 s c = r4 + s * (c - 4)`)—with **zero `sorry`s, zero custom axioms, and zero uses of `Classical.choice`**!
 
-### All 14 Constructive Hand-Proof Theorems in [`lean4/Connect5HandProof.lean`](lean4/Connect5HandProof.lean)
+### All 18 Constructive Hand-Proof Theorems in [`lean4/Connect5HandProof.lean`](lean4/Connect5HandProof.lean)
 
-| # | Lean 4 Theorem Identifier | Corresponding Hand-Proof Step (Paper II) | `#print axioms` Output |
+| # | Lean 4 Theorem Identifier | Corresponding Hand-Proof Step (Paper II & Appendix) | `#print axioms` Output |
 | :-: | :--- | :--- | :---: |
 | **1** | [`ply1_parity_obstruction`](lean4/Connect5HandProof.lean#L63) | Proposition 2.1: `8*7 - 1 = 55`, `55 % 2 = 1`, and `∀ k : Nat, 2 * k ≠ 55` | `[propext, Quot.sound]` |
 | **2** | [`vertical_domino_transversal`](lean4/Connect5HandProof.lean#L82) | Lemma 1: Every 5-row vertical window `[r0, r0+4]` contains `{1,2}` or `{3,4}` | `[propext, Quot.sound]` |
@@ -234,6 +241,10 @@ In [`lean4/Connect5HandProof.lean`](lean4/Connect5HandProof.lean) (companion to 
 | **12** | [`black_odd_row_transversal_hand_proof`](lean4/Connect5HandProof.lean#L381) | Player 2 (Black) odd-row transversal covers all 24 diagonals & odd horizontals | `[propext, Quot.sound]` |
 | **13** | [`book_step3_central_wall_blocks_all_horizontals`](lean4/Connect5HandProof.lean#L427) | **Central Wall Step 3:** `W₇` blocks all 28 horizontal lines (`Col 3` even / `Col 4` odd) | `[propext, Quot.sound]` |
 | **14** | [`book_step4_central_wall_diagonal_dichotomy`](lean4/Connect5HandProof.lean#L446) | **Central Wall Step 4:** Every diagonal is double-blocked at `W₇` or hits `{2,4,6}` in `Col 2/6` | `[propext, Quot.sound]` |
+| **15** | [`c4_7x6_book_thm1a_vertical_claimeven_double_blocked`](lean4/Connect5HandProof.lean#L504) | **Classic 7×6 C4 Thm IA:** Every vertical 4-line `[r0, r0+3]` contains `{1,3}` or `{3,5}` | `[propext, Quot.sound]` |
+| **16** | [`c4_7x6_book_thm1b_diagonal_claimeven_double_blocked`](lean4/Connect5HandProof.lean#L514) | **Classic 7×6 C4 Thm IB:** Every diagonal 4-line (`s = ±1`) hits `{1,3,5}` at `k = 0,2` or `1,3` | `[propext, Quot.sound]` |
+| **17** | [`c4_7x6_book_thm2_center_col3_pigeonhole`](lean4/Connect5HandProof.lean#L532) | **Classic 7×6 C4 Thm II:** Every horizontal 4-line crosses Center Column `c = 3` | `[propext, Quot.sound]` |
+| **18** | [`c4_7x6_book_thm3_odd_threat_zugzwang_parity`](lean4/Connect5HandProof.lean#L549) | **Classic 7×6 C4 Thm III:** Allis's Odd-Threat Zugzwang Law `(E - (7 - ft)) % 2 = 1` | `[propext, Quot.sound]` |
 
 ### Excerpt from [`lean4/Connect5HandProof.lean`](lean4/Connect5HandProof.lean#L172-L214)
 ```lean
@@ -370,9 +381,10 @@ Two complete research papers and three comprehensive markdown monographs are inc
 ├── HISTORICAL_AND_LITERATURE_ANALYSIS.md  # In-depth 38-year historical, folklore & type-theory monograph
 ├── HILBERT_ERDOS_PEN_AND_PAPER_PROOF.md   # Follow-Up Paper II: Classical pen-and-paper proof & Common Lisp audit
 ├── TECHNICAL_AUDIT_RESPONSE.md            # Complete resolution report for the 11 GPT-6.1 audit findings
+├── APPENDIX_CLASSIC_CONNECT4_7x6.md       # Appendix: The 3 Book Theorems of Classic 7x6 Connect-Four
 ├── LICENSE                                # MIT License
-├── build.ps1                              # Automated Rocq 9.1 proof compiler & 22-theorem zero-axiom verifier
-├── build_lean.ps1                         # Automated Lean 4.35.0 hand-proof compiler & 14-theorem allowlist verifier
+├── build.ps1                              # Automated Rocq 9.1 proof compiler & 24-theorem zero-axiom verifier
+├── build_lean.ps1                         # Automated Lean 4.35.0 hand-proof compiler & 18-theorem allowlist verifier
 ├── _CoqProject                            # Rocq platform configuration
 ├── generate_assets.py                     # Vector SVG visualization generator
 │
@@ -381,11 +393,11 @@ Two complete research papers and three comprehensive markdown monographs are inc
 ├── C5Principle.v                          # Allis follow-up strategy principle by well-founded induction
 ├── C5Rules.v                              # Deductive soundness of pairing structures (structure_sound)
 ├── C5Certificate.v                        # Inductive strategy trees, minimax duality, main game fairness
-├── C5CertChecker.v                        # Verified boolean reflection checker & 15 structural/parity/R3/R2 theorems
-├── CheckAssumptions.v                     # Zero-axiom validation script (verifies all 22 Rocq theorems)
+├── C5CertChecker.v                        # Verified reflection checker & 17 structural/parity/R3/R2/C4 theorems
+├── CheckAssumptions.v                     # Zero-axiom validation script (verifies all 24 Rocq theorems)
 │
 ├── lean4/                                 # Lean 4.35.0 formalization of the Hilbert-Erdos hand proof
-│   ├── Connect5HandProof.lean             # 14 analytic hand-proof theorems over Z (0 sorrys, 0 Classical.choice)
+│   ├── Connect5HandProof.lean             # 18 analytic hand-proof theorems over Z (0 sorrys, 0 Classical.choice)
 │   ├── lakefile.toml                      # Lake package configuration
 │   └── lean-toolchain                     # Pinned Lean 4.35.0 toolchain specification
 │
@@ -421,7 +433,7 @@ Two complete research papers and three comprehensive markdown monographs are inc
 
 ## 🛠 Reproduction & Build Instructions
 
-### 1. Recompile and Verify All 22 Formal Rocq 9.1 Theorems
+### 1. Recompile and Verify All 24 Formal Rocq 9.1 Theorems
 Ensure [Rocq 9.1 Platform](https://rocq-prover.org/) is installed:
 ```powershell
 # From repository root
@@ -429,21 +441,20 @@ powershell -ExecutionPolicy Bypass -File .\build.ps1
 ```
 Expected output:
 ```text
-=== Compiling Connect-5 (8x7) Formal Mathematical Proof ===
-Compiling C5Game.v... OK (6.80s)
-Compiling C5Board.v... OK (0.71s)
-Compiling C5Principle.v... OK (0.64s)
-Compiling C5Rules.v... OK (1.28s)
-Compiling C5Certificate.v... OK (0.72s)
-Compiling C5CertChecker.v... OK (1.13s)
-Compiling CheckAssumptions.v...
-  Verified: 22/22 theorems 'Closed under the global context' (0 Axioms, 0 Admits)
- OK (2.25s)
+=== Compiling Connect-5 (8x7) Formal Mathematical Proof in Rocq 9.1 ===
+Compiling C5Game.v... OK (0.63s)
+Compiling C5Board.v... OK (0.76s)
+Compiling C5Principle.v... OK (0.78s)
+Compiling C5Rules.v... OK (1.46s)
+Compiling C5Certificate.v... OK (0.9s)
+Compiling C5CertChecker.v... OK (1.15s)
+Compiling CheckAssumptions.v... OK (2.88s)
+  Verified: 24/24 theorems 'Closed under the global context' (0 Axioms, 0 Admits)
 
-All 6 foundational theory files (22 theorems) compiled and verified with ZERO axioms and ZERO admits!
+All 6 foundational theory files and all 24 theorems verified (24/24 Closed under the global context, 0 Axioms, 0 Admits)!
 ```
 
-### 2. Recompile and Verify All 14 Analytic Hand-Proof Theorems in Lean 4.35.0
+### 2. Recompile and Verify All 18 Analytic Hand-Proof Theorems in Lean 4.35.0
 Ensure [Lean 4 (`elan`)](https://lean-lang.org/) is installed:
 ```powershell
 # From repository root
@@ -454,7 +465,7 @@ Expected output:
 === Compiling Hilbert-Zermelo-Erdos Hand Proof in Lean 4 ===
 Lean (version 4.35.0, x86_64-w64-windows-gnu, commit eb6cafb7290e8bd5f2937522d8d804f58f02bafc, Release)
 ...
-All 14 analytic Hilbert-Erdos & Central Wall Book Proof theorems verified in Lean 4 (1.67s) with ZERO sorrys and ZERO custom axioms!
+All 18/18 analytic Hilbert-Erdos, Central Wall & Classic 7x6 Connect-4 theorems verified in Lean 4 (2.52s) with ZERO sorrys, ZERO custom axioms, and ZERO Classical.choice!
 ```
 
 ### 3. Run the CUDA 13.5 Bitboard Verification & Benchmark Suite

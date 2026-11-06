@@ -816,3 +816,73 @@ Proof.
   split; [exact Hemp | split; [exact Hst | split; [exact HStatic | exact (structure_sound Black b_r2 black_r2_full_struct HStatic)]]].
 Qed.
 
+(** * 11. Appendix: The Three "Book Theorems" of Classic 7x6 Connect-Four (k = 4)
+
+    Applying our exact framework to Classic 7x6 Connect-Four (7 columns 0..6,
+    6 rows 0..5, target k = 4, 69 winning lines):
+    - Because column height 6 is EVEN, all 42 cells partition at Move 0 into
+      21 pure Strong Vertical Dominoes [(c,0),(c,1)], [(c,2),(c,3)], [(c,4),(c,5)],
+      guaranteeing Player 2 (Black) all 21 odd-row cells {(c,1),(c,3),(c,5)}.
+    - This unconditionally kills 57 of the 69 winning lines (all 21 vertical lines,
+      all 24 diagonal lines, and all 12 odd-row horizontal lines), leaving ONLY
+      the 12 even-row horizontal lines (r in {0, 2, 4}).
+    - By the Pigeonhole Principle, every 4-column window [c0, c0+3] on 0..6 crosses
+      the single Center Column c = 3, so adding the 3 center even cells
+      {(3,0), (3,2), (3,4)} covers all 69 / 69 winning lines! *)
+
+Definition vlines_7x6_c4 : list (list cell) :=
+  flat_map (fun c => map (fun r => [(c,r);(c,r+1);(c,r+2);(c,r+3)]) (seq 0 3)) (seq 0 7).
+
+Definition hlines_7x6_c4 : list (list cell) :=
+  flat_map (fun r => map (fun c => [(c,r);(c+1,r);(c+2,r);(c+3,r)]) (seq 0 4)) (seq 0 6).
+
+Definition d1lines_7x6_c4 : list (list cell) :=
+  flat_map (fun c => map (fun r => [(c,r);(c+1,r+1);(c+2,r+2);(c+3,r+3)]) (seq 0 3)) (seq 0 4).
+
+Definition d2lines_7x6_c4 : list (list cell) :=
+  flat_map (fun c => map (fun r => [(c,r+3);(c+1,r+2);(c+2,r+1);(c+3,r)]) (seq 0 3)) (seq 0 4).
+
+Definition lines_7x6_c4 : list (list cell) :=
+  vlines_7x6_c4 ++ hlines_7x6_c4 ++ d1lines_7x6_c4 ++ d2lines_7x6_c4.
+
+Definition c4_odd_rows_21 : list cell :=
+  flat_map (fun c => [(c, 1); (c, 3); (c, 5)]) (seq 0 7).
+
+Definition c4_center3_even : list cell :=
+  [(3, 0); (3, 2); (3, 4)].
+
+Definition line_hits_set (S : list cell) (L : list cell) : bool :=
+  existsb (fun x => existsb (cell_eqb x) S) L.
+
+(** Theorem 23 (Classic 7x6 Connect-Four 57/69 Claimeven Collapse & 69/69 Center-3 Cover):
+    1. Classic 7x6 Connect-Four has exactly 69 winning 4-in-a-row lines.
+    2. Pure vertical Claimeven ([c4_odd_rows_21]) blocks 57 of the 69 lines, and
+       DOUBLE-BLOCKS (>= 2 cells per line) all 45 vertical and diagonal lines!
+    3. Adding the 3 even cells {(3,0), (3,2), (3,4)} of Center Column 3 blocks
+       all 69 of the 69 winning lines! *)
+Theorem c4_7x6_claimeven_57_of_69_and_center3_cover :
+  length lines_7x6_c4 = 69 /\
+  length (filter (line_hits_set c4_odd_rows_21) lines_7x6_c4) = 57 /\
+  forallb (fun L => 2 <=? length (filter (fun p => existsb (cell_eqb p) c4_odd_rows_21) L))
+          (vlines_7x6_c4 ++ d1lines_7x6_c4 ++ d2lines_7x6_c4) = true /\
+  forallb (line_hits_set (c4_center3_even ++ c4_odd_rows_21)) lines_7x6_c4 = true.
+Proof.
+  vm_compute. repeat split; reflexivity.
+Qed.
+
+(** Theorem 24 (Classic 7x6 Connect-Four Pure [lia] Book Theorems — Zero Enumeration):
+    1. Every vertical 4-line [r0, r0+3] in 0..5 (r0 <= 2) contains {1, 3} or {3, 5}.
+    2. Every horizontal 4-line [c0, c0+3] in 0..6 (c0 <= 3) crosses Center Column c = 3.
+    3. Allis's Odd-Threat Zugzwang Parity Law: subtracting an odd frozen column suffix
+       (7 - 2*j in {3, 5}) from an even empty count (2*k) leaves an odd move count
+       2*(k + j - 4) + 1 outside the frozen suffix. *)
+Theorem c4_7x6_book_theorems_lia :
+  (forall r0 : nat, r0 <= 2 -> (r0 <= 1 /\ 3 <= r0 + 3) \/ (r0 <= 3 /\ 5 <= r0 + 3)) /\
+  (forall c0 : nat, c0 <= 3 -> c0 <= 3 /\ 3 <= c0 + 3) /\
+  (forall k j : nat, 3 <= k -> 1 <= j -> j <= 2 ->
+    2 * k - (7 - 2 * j) = 2 * (k + j - 4) + 1).
+Proof.
+  repeat split; intros; lia.
+Qed.
+
+

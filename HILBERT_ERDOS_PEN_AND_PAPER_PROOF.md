@@ -200,9 +200,9 @@ Static types are *not* the only path to machine-checked mathematical truth. **Co
 In [`C5CertChecker.v`](C5CertChecker.v) (Rocq 9.1) and [`lean4/Connect5HandProof.lean`](lean4/Connect5HandProof.lean) (Lean 4.35.0), we formalize the entire **Hilbert–Zermelo–Erdős pen-and-paper proof**, the **5-Step "Central Wall (`W₇ = E₃ ∪ O₄`) & Alternating Parity" Book Proof**, and **4 Concrete Midgame Rule-R3/R2 `Static` & `safe` Theorems**:
 
 - **The 7-Cell Central Wall (`W₇ = E₃ ∪ O₄`) Insight**: In Column `3`, White guarantees all `4` even rows `E₃ = {(3,0), (3,2), (3,4), (3,6)}`; in Column `4`, White guarantees all `3` odd rows `O₄ = {(4,1), (4,3), (4,5)}`. Because every non-vertical 5-line (`c0 ∈ {0, 1, 2, 3}`) crosses **both** Column `3` and Column `4`, this 7-cell Central Wall **alone blocks 40 of the 52 non-vertical winning lines** (all **28** horizontal lines + all **12** in-phase diagonal lines)! The remaining **12** out-of-phase diagonals have `r₃` odd and `r₄` even, so by alternating column parity they land on even rows `{2, 4, 6}` in Column `2` or Column `6` (`W₆ = {(2,2), (2,4), (2,6), (6,2), (6,4), (6,6)}`).
-- **100% Constructive Proofs**: In Rocq 9.1, all **22** theorems are proved via well-founded induction, `lia`, and `vm_compute` (`Closed under the global context`, 0 axioms). In Lean 4.35.0, all **14** theorems are proved 100% constructively via `omega` and explicit parity classification lemmas—**none of them invoke `Classical.choice`**!
+- **100% Constructive Proofs**: In Rocq 9.1, all **24** theorems are proved via well-founded induction, `lia`, and `vm_compute` (`Closed under the global context`, 0 axioms). In Lean 4.35.0, all **18** theorems are proved 100% constructively via `omega` and explicit parity classification lemmas—**none of them invoke `Classical.choice`**!
 
-### 6.1 The 10 Elementary "Book Proof" & Concrete Midgame `Static`/`safe` Theorems in Rocq 9.1 ([`C5CertChecker.v`](C5CertChecker.v))
+### 6.1 The 12 Elementary "Book Proof", Concrete Midgame & Classic Connect-4 Theorems in Rocq 9.1 ([`C5CertChecker.v`](C5CertChecker.v))
 
 | # | Rocq 9.1 Theorem Identifier | Book Proof / Midgame Step Formalized | Proof Engine |
 | :-: | :--- | :--- | :---: |
@@ -216,8 +216,10 @@ In [`C5CertChecker.v`](C5CertChecker.v) (Rocq 9.1) and [`lean4/Connect5HandProof
 | **20** | [`r3_concrete_Static`](C5CertChecker.v#L755) | **Concrete R3 Invariant:** `Static White b_r3 white_r3_full_struct` (`s_frozen = Some (4, 1)`) | `check_static_sound` |
 | **21** | [`r3_concrete_cert_safe`](C5CertChecker.v#L763) | **Unconditional R3 Safety:** `safe White b_r3 Black ∧ safe White b_ply8 White` (`8^47` continuations) | `structure_sound` + `cert_sound` |
 | **22** | [`r2_concrete_black_static_safe`](C5CertChecker.v#L812) | **Unconditional R2 Safety:** `empties b_r2 = 36 ∧ check_static = true ∧ Static ∧ safe Black b_r2 White` | `vm_compute` + `structure_sound` |
+| **23** | [`c4_7x6_claimeven_57_of_69_and_center3_cover`](C5CertChecker.v#L859) | **Classic 7×6 C4 Collapse:** `O_21` kills `57/69` lines (double-blocks `45/45` V/D); `E_center ∪ O_21` covers **`69/69`** | `vm_compute` (0 axioms) |
+| **24** | [`c4_7x6_book_theorems_lia`](C5CertChecker.v#L875) | **Classic 7×6 C4 Book Laws:** Vertical double-block, Center-3 Pigeonhole, and Odd-Threat Zugzwang (`2k-(7-2j)`) | `lia` (0 axioms) |
 
-### 6.2 All 14 Constructive Hand-Proof Theorems Verified in Lean 4.35.0 ([`lean4/Connect5HandProof.lean`](lean4/Connect5HandProof.lean))
+### 6.2 All 18 Constructive Hand-Proof Theorems Verified in Lean 4.35.0 ([`lean4/Connect5HandProof.lean`](lean4/Connect5HandProof.lean))
 
 | # | Lean 4 Theorem Identifier | Corresponding Hand-Proof Step | Axioms Used (`#print axioms`) |
 | :-: | :--- | :--- | :---: |
@@ -235,6 +237,10 @@ In [`C5CertChecker.v`](C5CertChecker.v) (Rocq 9.1) and [`lean4/Connect5HandProof
 | **12** | [`black_odd_row_transversal_hand_proof`](lean4/Connect5HandProof.lean#L381) | Player 2 (Black) odd-row transversal covers all 24 diagonals & odd horizontals | `[propext, Quot.sound]` |
 | **13** | [`book_step3_central_wall_blocks_all_horizontals`](lean4/Connect5HandProof.lean#L417) | **Book Proof Step 3:** Central Wall (`Col 3` even ∪ `Col 4` odd) blocks all 28 horizontals | `[propext, Quot.sound]` |
 | **14** | [`book_step4_central_wall_diagonal_dichotomy`](lean4/Connect5HandProof.lean#L438) | **Book Proof Step 4:** Every diagonal is double-blocked at `W₇` or hits `{2,4,6}` at Col 2/6 | `[propext, Quot.sound]` |
+| **15** | [`c4_7x6_book_thm1a_vertical_claimeven_double_blocked`](lean4/Connect5HandProof.lean#L504) | **Classic 7×6 C4 Thm IA:** Every vertical 4-line `[r0, r0+3]` in `0..5` contains `{1,3}` or `{3,5}` | `[propext, Quot.sound]` |
+| **16** | [`c4_7x6_book_thm1b_diagonal_claimeven_double_blocked`](lean4/Connect5HandProof.lean#L514) | **Classic 7×6 C4 Thm IB:** Every diagonal 4-line (`s = ±1`) hits `{1,3,5}` at `k = 0,2` or `k = 1,3` | `[propext, Quot.sound]` |
+| **17** | [`c4_7x6_book_thm2_center_col3_pigeonhole`](lean4/Connect5HandProof.lean#L532) | **Classic 7×6 C4 Thm II:** Every horizontal 4-line crosses Center Column `c = 3` (`(3,0),(3,2),(3,4)`) | `[propext, Quot.sound]` |
+| **18** | [`c4_7x6_book_thm3_odd_threat_zugzwang_parity`](lean4/Connect5HandProof.lean#L549) | **Classic 7×6 C4 Thm III:** Allis's Odd-Threat Zugzwang Law `(E - (7 - ft)) % 2 = 1` | `[propext, Quot.sound]` |
 
 ### Reproducing the Rocq 9.1 & Lean 4.35.0 Verifications
 ```powershell
@@ -243,12 +249,20 @@ powershell -ExecutionPolicy Bypass -File .\build_lean.ps1
 ```
 Output:
 ```text
-=== All 22 Rocq 9.1 theorems verified (0 axioms) & all 14 Lean 4.35.0 theorems verified (0 sorrys, 0 Classical.choice)! ===
+=== All 24 Rocq 9.1 theorems verified (0 axioms) & all 18 Lean 4.35.0 theorems verified (0 sorrys, 0 Classical.choice)! ===
 ```
 
 ---
 
-## 📄 7. Download the Compiled Academic PDFs (AMS & ACS Styles)
+## 🧩 7. Appendix Note: Applying Our Methods to Classic `7 × 6` Connect-Four (`k = 4`)
+
+How do our exact deductive pairing theory (`C5Rules.v`), computational reflection (`C5CertChecker.v`), CUDA bitboards (`c5_gpu_search.cu`), and "FROM THE BOOK" proofs (`lia` / `omega`) apply to **Classic `7 × 6` Connect-Four (`k = 4`)**?
+- Because `7 × 6` has an **even** column height (`6` rows), all `42` cells partition at Move 0 into **21 pure Strong Vertical Dominoes**, unconditionally killing **57 of the 69 winning lines (`82.6%`)**—including *every* vertical and *every* diagonal line on the board—and reducing the entire game of Connect-Four to the **12 even-row horizontal lines** crossing Center Column `c = 3`!
+- Read the complete, machine-checked Appendix Note here: [**`APPENDIX_CLASSIC_CONNECT4_7x6.md`**](APPENDIX_CLASSIC_CONNECT4_7x6.md).
+
+---
+
+## 📄 8. Download the Compiled Academic PDFs (AMS & ACS Styles)
 
 - **Follow-Up Paper II (American Mathematical Society `amsart` Style):**
   - [**`paper/connect5_8x7_hilbert_erdos_AMS.pdf`**](paper/connect5_8x7_hilbert_erdos_AMS.pdf)

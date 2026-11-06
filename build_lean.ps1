@@ -47,11 +47,11 @@ foreach ($line in $output) {
     }
 }
 
-if ($axiomReports -ne 14) {
-    Write-Error "Expected 14 #print axioms reports from Connect5HandProof.lean, got $axiomReports"
+if ($axiomReports -ne 18) {
+    Write-Error "Expected 18 #print axioms reports from Connect5HandProof.lean, got $axiomReports"
     exit 1
 }
 
 Write-Host ""
-Write-Host ("All $axiomReports/14 analytic Hilbert-Erdos & Central Wall theorems verified in Lean 4 ({0:N2}s) with ZERO sorrys, ZERO custom axioms, and ZERO Classical.choice!" -f $sw.Elapsed.TotalSeconds) -ForegroundColor Green
+Write-Host ("All $axiomReports/18 analytic Hilbert-Erdos, Central Wall & Classic 7x6 Connect-4 theorems verified in Lean 4 ({0:N2}s) with ZERO sorrys, ZERO custom axioms, and ZERO Classical.choice!" -f $sw.Elapsed.TotalSeconds) -ForegroundColor Green
 
