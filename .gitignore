@@ -1,0 +1,28 @@
+# Rocq / Coq compilation artifacts
+*.vo
+*.vok
+*.vos
+*.glob
+.*.aux
+.lia.cache
+.test_list.aux
+
+# C / C++ / CUDA binary outputs
+*.exe
+*.o
+*.obj
+*.dll
+*.so
+bin/
+solver/bin/
+solver/logs/
+
+# LaTeX build artifacts
+paper/*.aux
+paper/*.log
+paper/*.out
+paper/*.toc
+
+# Temporary / scratch files
+scratch/
+*.tmp
