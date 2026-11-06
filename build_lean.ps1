@@ -30,4 +30,4 @@ if ($output -match "sorryAx") {
 }
 
 Write-Host ""
-Write-Host ("All 12 analytic Hilbert-Erdos theorems verified in Lean 4 ({0:N2}s) with ZERO sorrys and ZERO custom axioms!" -f $sw.Elapsed.TotalSeconds) -ForegroundColor Green
+Write-Host ("All 14 analytic Hilbert-Erdos & Central Wall theorems verified in Lean 4 ({0:N2}s) with ZERO sorrys and ZERO custom axioms!" -f $sw.Elapsed.TotalSeconds) -ForegroundColor Green

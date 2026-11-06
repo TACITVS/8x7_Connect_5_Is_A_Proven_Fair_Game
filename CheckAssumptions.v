@@ -12,3 +12,9 @@ Print Assumptions opening_27pair_line_cover.
 Print Assumptions core10_covers_all_76_lines.
 Print Assumptions dead_cell_4_6_six_lines_double_blocked.
 Print Assumptions r3_frozen_column_restores_even_parity.
+Print Assumptions book_step1_vertical_middle_two_dominoes.
+Print Assumptions book_step2_central_wall_pigeonhole.
+Print Assumptions book_step3_horizontal_parity_split.
+Print Assumptions book_step4_diagonal_parity_alternation.
+Print Assumptions book_central_wall_decomposition.
+Print Assumptions book_step5_r3_parity_law_lia.

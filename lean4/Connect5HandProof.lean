@@ -405,10 +405,83 @@ theorem black_odd_row_transversal_hand_proof (c0 r4 s : Int)
     · exact ⟨4, by omega, by omega, by omega⟩
     · exact ⟨3, by omega, by omega, by omega⟩
 
+/-!
+## Section 8. The Elementary "Central Wall & Alternating Parity" Book Proof
+
+In the Central 2-Column Wall `{Col 3, Col 4}`:
+- In **Column 3**, White owns all 4 **even** rows `E_3 = {(3,0), (3,2), (3,4), (3,6)}`.
+- In **Column 4**, White owns all 3 **odd** rows `O_4 = {(4,1), (4,3), (4,5)}`.
+Together, `W_7 = E_3 ∪ O_4` blocks all 28 horizontal lines AND double-blocks all
+12 "In-Phase" diagonal lines, leaving only the 12 "Out-of-Phase" diagonals, each
+of which hits an even positive row `{2, 4, 6}` in Column 2 or Column 6.
+-/
+
+/-- Membership in the 7-Cell Central Wall `W_7 = E_3 ∪ O_4`. -/
+def InCentralWall7 (c r : Int) : Prop :=
+  (c = 3 ∧ (r = 0 ∨ r = 2 ∨ r = 4 ∨ r = 6)) ∨
+  (c = 4 ∧ (r = 1 ∨ r = 3 ∨ r = 5))
+
+/-- **Book Proof Step 3 (The 7-Cell Central Wall Kills All 28 Horizontal Lines):**
+    Every valid horizontal 5-line (`s = 0`) crosses both Column 3 and Column 4,
+    and hits `InCentralWall7` at Column 3 (if `r4` is even) or at Column 4 (if `r4` is odd). -/
+theorem book_step3_central_wall_blocks_all_horizontals (c0 r4 : Int)
+    (hL : ValidNonVerticalLine c0 r4 0) :
+    ∃ c : Int, c0 ≤ c ∧ c ≤ c0 + 4 ∧ InCentralWall7 c (rowAt r4 0 c) := by
+  rcases hL with ⟨hc0_low, hc0_high, _, hr_left_low, hr_left_high, _, _⟩
+  unfold rowAt InCentralWall7 at *
+  by_cases h_odd : r4 % 2 = 1
+  · exact ⟨4, by omega, by omega,
+      Or.inr ⟨rfl, odd_row_1_3_5 _ (by omega) (by omega) (by omega)⟩⟩
+  · by_cases h0 : r4 = 0
+    · exact ⟨3, by omega, by omega, Or.inl ⟨rfl, Or.inl (by omega)⟩⟩
+    · exact ⟨3, by omega, by omega,
+        Or.inl ⟨rfl, Or.inr (even_row_2_4_6 _ (by omega) (by omega) (by omega))⟩⟩
+
+/-- **Book Proof Step 4 (Central Wall Diagonal Dichotomy: In-Phase vs. Out-of-Phase):**
+    For every diagonal 5-line (`s = -1` or `s = 1`):
+    - **Case A (In-Phase at Central Wall):** `rowAt r4 s 3` is even and `r4` is odd,
+      so the line is **DOUBLE-BLOCKED** at both `(3, rowAt r4 s 3) ∈ E_3` and `(4, r4) ∈ O_4`!
+    - **Case B (Out-of-Phase at Central Wall):** `rowAt r4 s 3` is odd and `r4` is even,
+      so every even column has an even row and the line hits `{2, 4, 6}` at `c = 2` or `c = 6`! -/
+theorem book_step4_central_wall_diagonal_dichotomy (c0 r4 s : Int)
+    (hL : ValidNonVerticalLine c0 r4 s)
+    (h_diag : s = -1 ∨ s = 1) :
+    (InCentralWall7 3 (rowAt r4 s 3) ∧ InCentralWall7 4 (rowAt r4 s 4)) ∨
+    ((c0 ≤ 2 ∧ 2 ≤ c0 + 4 ∧ (rowAt r4 s 2 = 2 ∨ rowAt r4 s 2 = 4 ∨ rowAt r4 s 2 = 6)) ∨
+     (c0 ≤ 6 ∧ 6 ≤ c0 + 4 ∧ (rowAt r4 s 6 = 2 ∨ rowAt r4 s 6 = 4 ∨ rowAt r4 s 6 = 6))) := by
+  rcases hL with ⟨hc0_low, hc0_high, _, hr_left_low, hr_left_high, hr_right_low, hr_right_high⟩
+  unfold rowAt InCentralWall7 at *
+  rcases h_diag with rfl | rfl
+  · -- Slope s = -1:
+    by_cases h_odd : r4 % 2 = 1
+    · -- In-Phase: r4 is odd (`{1,3,5}`) and r3 = r4 + 1 is even (`{2,4,6}`):
+      exact Or.inl ⟨Or.inl ⟨rfl, Or.inr (even_row_2_4_6 _ (by omega) (by omega) (by omega))⟩,
+                    Or.inr ⟨rfl, odd_row_1_3_5 _ (by omega) (by omega) (by omega)⟩⟩
+    · -- Out-of-Phase: r4 is even, hits `{2,4,6}` at Col 2 or Col 6:
+      by_cases h_c0 : c0 ≤ 2
+      · by_cases h_high : r4 + -1 * (2 - 4) ≤ 6
+        · exact Or.inr (Or.inl ⟨h_c0, by omega, even_row_2_4_6 _ (by omega) (by omega) h_high⟩)
+        · exact Or.inr (Or.inr ⟨by omega, by omega, even_row_2_4_6 _ (by omega) (by omega) (by omega)⟩)
+      · exact Or.inr (Or.inr ⟨by omega, by omega, even_row_2_4_6 _ (by omega) (by omega) (by omega)⟩)
+  · -- Slope s = 1:
+    by_cases h_odd : r4 % 2 = 1
+    · -- In-Phase: r4 is odd (`{1,3,5}`) and r3 = r4 - 1 is even (`{0,2,4}`):
+      by_cases h_r3_zero : r4 + 1 * (3 - 4) = 0
+      · exact Or.inl ⟨Or.inl ⟨rfl, Or.inl h_r3_zero⟩,
+                      Or.inr ⟨rfl, odd_row_1_3_5 _ (by omega) (by omega) (by omega)⟩⟩
+      · exact Or.inl ⟨Or.inl ⟨rfl, Or.inr (even_row_2_4_6 _ (by omega) (by omega) (by omega))⟩,
+                      Or.inr ⟨rfl, odd_row_1_3_5 _ (by omega) (by omega) (by omega)⟩⟩
+    · -- Out-of-Phase: r4 is even, hits `{2,4,6}` at Col 2 or Col 6:
+      by_cases h_c0 : c0 ≤ 2
+      · by_cases h_low : 2 ≤ r4 + 1 * (2 - 4)
+        · exact Or.inr (Or.inl ⟨h_c0, by omega, even_row_2_4_6 _ (by omega) h_low (by omega)⟩)
+        · exact Or.inr (Or.inr ⟨by omega, by omega, even_row_2_4_6 _ (by omega) (by omega) (by omega)⟩)
+      · exact Or.inr (Or.inr ⟨by omega, by omega, even_row_2_4_6 _ (by omega) (by omega) (by omega)⟩)
+
 end Connect5HandProof
 
 /-!
-## Section 8. Zero-Axiom Verification Audit (`#print axioms`)
+## Section 9. Zero-Axiom Verification Audit (`#print axioms`)
 
 Every theorem in this file is verified by Lean 4's kernel to depend on ZERO `sorry`s,
 ZERO custom axioms, and NOT EVEN `Classical.choice` (100% constructive!):
@@ -425,3 +498,5 @@ ZERO custom axioms, and NOT EVEN `Classical.choice` (100% constructive!):
 #print axioms Connect5HandProof.allis_followup_induction
 #print axioms Connect5HandProof.horizontal_5col_pair_transversal
 #print axioms Connect5HandProof.black_odd_row_transversal_hand_proof
+#print axioms Connect5HandProof.book_step3_central_wall_blocks_all_horizontals
+#print axioms Connect5HandProof.book_step4_central_wall_diagonal_dichotomy

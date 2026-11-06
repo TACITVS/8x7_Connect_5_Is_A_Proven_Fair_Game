@@ -1,7 +1,7 @@
 # Formal Mathematical Proof: Connect-5 on an 8x7 Board with Gravity is a Fair Game
 
-[![Rocq 9.1 Verified](https://img.shields.io/badge/Rocq%209.1-12%20Theorems%20Verified%20(0%20Axioms)-success.svg?style=for-the-badge&logo=coq)](CheckAssumptions.v)
-[![Lean 4.35.0 Verified](https://img.shields.io/badge/Lean%204.35.0-12%20Hand--Proof%20Theorems%20(0%20Sorrys)-10b981.svg?style=for-the-badge)](lean4/Connect5HandProof.lean)
+[![Rocq 9.1 Verified](https://img.shields.io/badge/Rocq%209.1-18%20Theorems%20Verified%20(0%20Axioms)-success.svg?style=for-the-badge&logo=coq)](CheckAssumptions.v)
+[![Lean 4.35.0 Verified](https://img.shields.io/badge/Lean%204.35.0-14%20Hand--Proof%20Theorems%20(0%20Sorrys)-10b981.svg?style=for-the-badge)](lean4/Connect5HandProof.lean)
 [![Game Theory Status](https://img.shields.io/badge/Game%20Theoretic%20Value-Draw%20(Fair)-blue.svg?style=for-the-badge)](C5Certificate.v)
 [![Historical Monograph](https://img.shields.io/badge/📜%20Must%20Read-38--Year%20Historical%20%26%20Literature%20Audit-f59e0b.svg?style=for-the-badge)](HISTORICAL_AND_LITERATURE_ANALYSIS.md)
 [![Follow-Up Paper II](https://img.shields.io/badge/📖%20New%20Paper%20II-Hilbert--Erdős%20Pen--and--Paper%20Proof%20%26%20Lisp-8b5cf6.svg?style=for-the-badge)](HILBERT_ERDOS_PEN_AND_PAPER_PROOF.md)
@@ -9,7 +9,7 @@
 [![Clang 23 Optimized](https://img.shields.io/badge/Compiler-Clang%2023%20%7C%20GCC%2014-orange.svg?style=for-the-badge&logo=llvm)](solver/pdfpn_fast.c)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge)](LICENSE)
 
-> **Abstract:** In combinatorial game theory, determining the exact game-theoretic value of positional games with gravity on asymmetric boards presents severe computational and deductive barriers. While standard Connect-Four (7 × 6, 4-in-a-row) is a known first-player win (Victor Allis & James D. Allen, 1988), extending the connection target to 5-in-a-row on an 8 × 7 grid restores game-theoretic equilibrium. We present the first complete formal mathematical proof in **Rocq 9.1 (Coq)** and **Lean 4.35.0** establishing that **Connect-5 on an 8 × 7 board with gravity is a theoretically fair game** (`game_value = Draw`). The proof is 100% machine-checked with **zero unproven axioms and zero admits/sorrys**, verified through a 1,160-line deductive mechanization of Victor Allis's pairing theory (`C5Rules.v`), inductive strategy trees, and computational reflection (`vm_compute`), complemented by a native **CUDA 13.5 / Clang** bitboard engine evaluating **405.35 Million positions/second**, and accompanied by **Follow-Up Paper II** presenting the classical **Hilbert–Zermelo–Erdős pen-and-paper proof** (`HILBERT_ERDOS_PEN_AND_PAPER_PROOF.md`) and its **100% constructive zero-enumeration mechanization in Lean 4.35.0** ([`lean4/Connect5HandProof.lean`](lean4/Connect5HandProof.lean)).
+> **Abstract:** In combinatorial game theory, determining the exact game-theoretic value of positional games with gravity on asymmetric boards presents severe computational and deductive barriers. While standard Connect-Four (7 × 6, 4-in-a-row) is a known first-player win (Victor Allis & James D. Allen, 1988), extending the connection target to 5-in-a-row on an 8 × 7 grid restores game-theoretic equilibrium. We present the first complete formal mathematical proof in **Rocq 9.1 (Coq)** and **Lean 4.35.0** establishing that **Connect-5 on an 8 × 7 board with gravity is a theoretically fair game** (`game_value = Draw`). The proof is 100% machine-checked with **zero unproven axioms and zero admits/sorrys** across **18 Rocq 9.1 theorems** ([`CheckAssumptions.v`](CheckAssumptions.v)) and **14 Lean 4.35.0 theorems** ([`lean4/Connect5HandProof.lean`](lean4/Connect5HandProof.lean)), verified through a 1,160-line deductive mechanization of Victor Allis's pairing theory (`C5Rules.v`), inductive strategy trees, computational reflection (`vm_compute`), and Presburger arithmetic (`lia` / `omega`), complemented by a native **CUDA 13.5 / Clang** bitboard engine evaluating **405.35 Million positions/second**, and accompanied by **Follow-Up Paper II** presenting the classical **Hilbert–Zermelo–Erdős & Central Wall pen-and-paper proof** (`HILBERT_ERDOS_PEN_AND_PAPER_PROOF.md`).
 
 ---
 
@@ -29,10 +29,10 @@
 </p>
 
 > [!TIP]
-> ### 💎 NEW — Follow-Up Paper II & Lean 4.35.0 Formalization: How Would David Hilbert & Paul Erdős Prove 8×7 Connect-5 Fairness on a Single Napkin?
-> Suppose you had **no computer, no GPU, and no `vm_compute` list enumeration**—how would **David Hilbert**, **Ernst Zermelo**, and **Paul Erdős** write a human-surveyable pen-and-paper proof of our theorems? And how does **Lean 4.35.0** or **untyped Common Lisp (`ACL2` & homoiconic macros)** verify it?
-> - **Zero-Enumeration 12-Line Analytic Proof of the 10-Cell Core (`erdos_10cell_transversal_hand_proof`):** Proves via the **Pigeonhole Principle** on 5-column spans and **Modulo-2 Parity** (`r(c_even) = r(4) ± 2s ≡ r(4) (mod 2)`) that our 10-cell transversal blocks all 52 horizontal and diagonal winning lines without inspecting a single line by computer!
-> - **100% Constructive Formalization in Lean 4.35.0 (`lean4/Connect5HandProof.lean`):** All **12 analytic hand-proof theorems** are proved over affine line equations on `ℤ` in **Lean 4.35.0** with **ZERO `sorry`s, ZERO custom axioms, and ZERO uses of `Classical.choice`**!
+> ### 💎 NEW — Follow-Up Paper II & Dual Rocq 9.1 / Lean 4.35.0 "Book Proof": How Would David Hilbert & Paul Erdős Prove 8×7 Connect-5 Fairness on a Single Napkin?
+> Suppose you had **no computer, no GPU, and no `vm_compute` list enumeration**—what is the cleanest, most elementary pen-and-paper proof ("from THE BOOK") of our theorems, and how do **Rocq 9.1 (`lia`)**, **Lean 4.35.0 (`omega`)**, and **untyped Common Lisp (`ACL2` & homoiconic macros)** verify it?
+> - **The 2-Column "Central Wall" Book Proof (`Col 3` Even + `Col 4` Odd):** Every non-vertical 5-line on an 8-column board crosses **both Column 3 and Column 4**. Because White owns all **even** rows `{0,2,4,6}` in Column 3 and all **odd** rows `{1,3,5}` in Column 4 (`central_wall_7cells`), the Central Wall alone blocks **all 28 horizontal lines** AND **double-blocks all 12 in-phase diagonal lines** (`40` of `52` lines!), while the remaining **12 out-of-phase diagonals** have even rows at every even column and hit `{2,4,6}` in Column 2 or Column 6!
+> - **100% Constructive Formalization in Both Rocq 9.1 (`C5CertChecker.v`) & Lean 4.35.0 (`lean4/Connect5HandProof.lean`):** All **18 Rocq 9.1 theorems** and **14 Lean 4.35.0 theorems** are verified with **ZERO `sorry`s, ZERO custom axioms, and ZERO uses of `Classical.choice`**!
 > <div align="center">
 >   <h3>
 >     <a href="HILBERT_ERDOS_PEN_AND_PAPER_PROOF.md">📘 Read Follow-Up Paper II (<code>HILBERT_ERDOS_PEN_AND_PAPER_PROOF.md</code>)</a>
@@ -59,8 +59,8 @@
 2. [Folklore vs. Novel Scientific Contributions](#-folklore-vs-novel-scientific-contributions)
 3. [Architecture & Verification Pipeline](#-architecture--verification-pipeline)
 4. [The First-Player Parity Trap, 27-Pair Coverage & Rule R3](#-the-first-player-parity-trap-27-pair-coverage--rule-r3)
-5. [Formal Verification Structure & 12 Machine-Checked Theorems (Rocq 9.1)](#-formal-verification-structure--12-machine-checked-theorems-rocq-91)
-6. [Analytic Hand-Proof Formalization & 12 Constructive Theorems (Lean 4.35.0)](#-analytic-hand-proof-formalization--12-constructive-theorems-lean-4350)
+5. [Formal Verification Structure & 18 Machine-Checked Theorems (Rocq 9.1)](#-formal-verification-structure--18-machine-checked-theorems-rocq-91)
+6. [Analytic Hand-Proof Formalization & 14 Constructive Theorems (Lean 4.35.0)](#-analytic-hand-proof-formalization--14-constructive-theorems-lean-4350)
 7. [Type-Theoretic Foundations: Rocq 9.1 (CIC) vs. Haskell vs. Common Lisp vs. Higher Type Theories](#-type-theoretic-foundations-rocq-91-cic-vs-haskell-vs-common-lisp-vs-higher-type-theories)
 8. [Massively Parallel GPU Solver & Benchmarks (Log Scale)](#-massively-parallel-gpu-solver--benchmarks-log-scale)
 9. [Academic Preprints — Paper I & Follow-Up Paper II (AMS & ACS Styles)](#-academic-preprints--paper-i--follow-up-paper-ii-ams--acs-styles)
@@ -78,12 +78,12 @@
 | **Even-Height Connect-Four** | 6 × 6, 8 × 6, 8 × 8 | 4 | **Second-Player Win (Yellow / Black)** | John Tromp (1995–2015) | Unverified C Search |
 | **Connect-Four (8x7)** | 8 × 7 | 4 | **First-Player Win (Red / White)** | John Tromp (1995) | Unverified C Search |
 | **Connect-5 (7x6)** | 7 × 6 | 5 | **Draw** | Classical Pairing | Unverified |
-| **Connect-5 (8x7)** *(This Work)* | **8 × 7** | **5** | **Exact Draw (`game_value = Draw`)** | **TACITVS & Antigravity (2026)** | **Rocq 9.1 + Lean 4.35.0 (0 Axioms)** |
+| **Connect-5 (8x7)** *(This Work)* | **8 × 7** | **5** | **Exact Draw (`game_value = Draw`)** | **TACITVS & Antigravity (2026)** | **Rocq 9.1 (18 Thms) + Lean 4.35.0 (14 Thms)** |
 
 ### Key Milestones:
 - **Exact Equilibrium Proved:** Because Nash's Strategy-Stealing Argument fails under gravity (where an extra stone changes column height and can induce *Zugzwang*, as shown by Tromp's second-player wins on 6 × 6 and 8 × 8), proving `game_value = Draw` requires independently verifying **both** First-Player Defense (`safe White (play initial 3 White) Black`) and Second-Player Defense (`safe Black initial White`).
-- **Dual-Prover Zero-Axiom Soundness (Rocq 9.1 + Lean 4.35.0):** Confirmed by [`CheckAssumptions.v`](CheckAssumptions.v) (`Closed under the global context` × 12 in Rocq 9.1) and [`lean4/Connect5HandProof.lean`](lean4/Connect5HandProof.lean) (12 analytic hand-proof theorems verified in Lean 4.35.0 with 0 `sorry`s, 0 custom axioms, and 0 `Classical.choice`).
-- **Constructive Resolution of First-Player Parity:** Machine-checked proofs of the **Ply-1 Parity Obstruction** (`parity_trap_ply1`), the **27-Pair Static Opening Coverage** (`opening_27pair_line_cover`), the **10-Cell Core Sufficiency Theorem** (`core10_covers_all_76_lines`), the **Double-Blocking of Dead Cell (4, 6)** (`dead_cell_4_6_six_lines_double_blocked`), and **Rule R3 Frozen-Threat Dynamic Parity Restoration** (`r3_frozen_column_restores_even_parity`).
+- **Dual-Prover Zero-Axiom Soundness (Rocq 9.1 + Lean 4.35.0):** Confirmed by [`CheckAssumptions.v`](CheckAssumptions.v) (`Closed under the global context` × 18 in Rocq 9.1) and [`lean4/Connect5HandProof.lean`](lean4/Connect5HandProof.lean) (14 analytic hand-proof theorems verified in Lean 4.35.0 with 0 `sorry`s, 0 custom axioms, and 0 `Classical.choice`).
+- **Constructive Resolution of First-Player Parity & The "Central Wall" Book Proof:** Machine-checked proofs of the **Ply-1 Parity Obstruction** (`parity_trap_ply1`), the **27-Pair Static Opening Coverage** (`opening_27pair_line_cover`), the **10-Cell Core Sufficiency Theorem** (`core10_covers_all_76_lines`), the **7-Cell Central Wall Decomposition** (`book_central_wall_decomposition` & `book_step4_diagonal_parity_alternation`), the **Double-Blocking of Dead Cell (4, 6)** (`dead_cell_4_6_six_lines_double_blocked`), and **Rule R3 Frozen-Threat Dynamic Parity Restoration** (`r3_frozen_column_restores_even_parity` & `book_step5_r3_parity_law_lia`).
 - **GPU-Accelerated Synthesis:** Adaptation of John Tromp's Fhourstones sentinel-bit bitboard representation to exact 64-bit register saturation (`8 cols × (7 + 1 sentinel) = 64 bits`) on an NVIDIA RTX 4060 executing at **405,350,000 board evaluations per second** (41,362× single-core CPU speedup).
 
 ---
@@ -101,7 +101,7 @@ A rigorous scientific boundary separates the **classical AI folklore** we inheri
 | **Bitboard Representation** | **John Tromp (1993/1995)** invented the **Fhourstones** 64-bit column-sentinel bitboard layout (`(mask + bottom) & board`) and 4-shift win detection. | **Exact 64-Bit Hardware Saturation on GPU (`c5_gpu_search.cu`).** Exploited `8 cols × (7 + 1 sentinel) = 64 bits` (zero wasted bits in `uint64_t`) across 4.19M CUDA threads at **405.35M evals/s**. | Verified in [`solver/c5_gpu_search.cu`](solver/c5_gpu_search.cu) |
 | **AND/OR Tree Search** | **Ayumu Nagai (1999, 2002)** invented Depth-First Proof-Number Search (`df-pn` / `MID`); **Kaneko (2010)** & **Pawlewicz (2013)** added `PDFPN` virtual loss. | Integrated our exact formalizable leaf rules (`R1` weak, `R2` Claimeven, `R3` frozen-threat Claimeven) directly into `MID` leaf evaluation in [`solver/rules.h`](solver/rules.h). | Verified in [`solver/pdfpn.c`](solver/pdfpn.c) & [`solver/rules.h`](solver/rules.h) |
 | **Computational Reflection** | **Georges Gonthier (2005, 2008)** established external search + verified `vm_compute` boolean checker in Coq for the Four Color Theorem. | Built the verified boolean decider `check_static` and DAG strategy evaluator `check_cert_node` for gravity `(m, n, k)` games, proving `check_static_sound`, `cert_sound`, and `cert_fair`. | Machine-checked in [`C5CertChecker.v`](C5CertChecker.v) |
-| **First-Player Parity & Combinatorial Core** | Classical *Claimeven* requires an even number of empty cells (`s_frozen = None`), which fails at Ply 1 (`56 - 1 = 55` odd empty cells). | **Proved 5 New Structural & Parity Theorems (Rocq 9.1) + 12 Analytic Hand-Proof Theorems (Lean 4.35.0):** (1) `parity_trap_ply1`, (2) `opening_27pair_line_cover`, (3) `core10_covers_all_76_lines` / `erdos_10cell_transversal_hand_proof`, (4) `dead_cell_4_6_six_lines_double_blocked`, and (5) `r3_frozen_column_restores_even_parity`. | Verified in [`C5CertChecker.v`](C5CertChecker.v) & [`lean4/Connect5HandProof.lean`](lean4/Connect5HandProof.lean) |
+| **First-Player Parity & Combinatorial Core** | Classical *Claimeven* requires an even number of empty cells (`s_frozen = None`), which fails at Ply 1 (`56 - 1 = 55` odd empty cells). | **Proved 11 Structural, Parity & "Central Wall Book Proof" Theorems in Rocq 9.1 + 14 Analytic Theorems in Lean 4.35.0:** (1) `parity_trap_ply1`, (2) `opening_27pair_line_cover`, (3) `core10_covers_all_76_lines`, (4) `dead_cell_4_6_six_lines_double_blocked`, (5) `r3_frozen_column_restores_even_parity`, and (6–11) the 6 Central Wall & `lia` Book Proof theorems. | Verified in [`C5CertChecker.v`](C5CertChecker.v) & [`lean4/Connect5HandProof.lean`](lean4/Connect5HandProof.lean) |
 
 ---
 
@@ -116,7 +116,7 @@ The formal proof bridges foundational constructive deductive reasoning in Rocq 9
 1. **Foundational Layer ([`C5Game.v`](C5Game.v), [`C5Board.v`](C5Board.v)):** Trusted operational semantics of the 8 × 7 board with gravity, column height constraints (0 ≤ r < 7, 0 ≤ c < 8), 76 winning 5-in-a-row lines, and inductive safety predicates.
 2. **Deductive Layer ([`C5Principle.v`](C5Principle.v), [`C5Rules.v`](C5Rules.v)):** Victor Allis's combinatorial pairing theory formalized for arbitrary boards. Proves that strong vertical dominoes, horizontal ground-row pairs, rigid chains, and Rule R3 frozen threats guarantee safety via well-founded induction on empty cells (`structure_sound`).
 3. **GPU Synthesis Layer ([`solver/c5_gpu_search.cu`](solver/c5_gpu_search.cu)):** CUDA kernel utilizing warp-level parallel bitboard manipulation (adapting Tromp's Fhourstones sentinel encoding to 64-bit GPU registers) to evaluate 405.35M positions/sec.
-4. **Computational Reflection & Analytic Hand Proof ([`C5Certificate.v`](C5Certificate.v), [`C5CertChecker.v`](C5CertChecker.v), [`lean4/Connect5HandProof.lean`](lean4/Connect5HandProof.lean)):** Verified boolean reflection checker executed via `vm_compute` in Rocq 9.1, paired with a zero-enumeration Presburger arithmetic (`omega`) formalization of the Hilbert–Erdős pen-and-paper proof in Lean 4.35.0.
+4. **Computational Reflection & Analytic Hand Proof ([`C5Certificate.v`](C5Certificate.v), [`C5CertChecker.v`](C5CertChecker.v), [`lean4/Connect5HandProof.lean`](lean4/Connect5HandProof.lean)):** Verified boolean reflection checker executed via `vm_compute` in Rocq 9.1, paired with a zero-enumeration Presburger arithmetic (`lia` / `omega`) formalization of the Hilbert–Erdős & Central Wall pen-and-paper proof in both Rocq 9.1 and Lean 4.35.0.
 
 ---
 
@@ -131,27 +131,29 @@ However, when Player 1 (Red/White, d = 0) defends after opening at `(3, 0)`, **u
 - The remaining number of empty cells at Ply 1 is `56 - 1 = 55`, which is **odd** (`parity_trap_ply1`).
 - An odd set of 55 cells **cannot** be partitioned into disjoint 2-cell pairs (`s_frozen = None`).
 
-### 2. Static Coverage: The 27-Pair Decomposition & The 10-Cell Core
-Statically, partitioning 54 of the 55 empty cells into **27 pairs** while leaving `(4, 6)` unassigned (`white_27pair_struct`) satisfies complete 76-line coverage (`opening_27pair_line_cover`):
-1. **Red Opening Anchor (R₀):** `(3, 0)` played by Red/White on ply 0.
-2. **Double-Blocked Dead Cell `(4, 6)` (`dead_cell_4_6_six_lines_double_blocked`):** Cell `(4, 6)` at the top of column 4 lies on exactly **6 winning lines**, and every single one of those 6 lines already contains **at least 2 guaranteed Red upper domino cells**, rendering `(4, 6)` statically redundant.
-3. **3 Ground-Row Cross Pairs:** Paired horizontally across row 0 (`P₁: (0,0)⟷(7,0)`, `P₂: (1,0)⟷(5,0)` or `(1,0)⟷(6,0)`, `P₃: (2,0)⟷(6,0)` or `(2,0)⟷(5,0)`).
-4. **24 Vertical Dominoes:** Covering rows `1 ≤ r ≤ 6` in columns `0, 1, 2, 3, 5, 6, 7` and rows `0 ≤ r ≤ 5` in column `4`.
-5. **The 10-Cell Core Theorem (`core10_covers_all_76_lines`):** Even more remarkably, just **10 guaranteed cells** in Columns `2, 3, 4, 6`—namely `{(3,0), (2,2), (2,4), (2,6), (4,1), (4,3), (4,5), (6,2), (6,4), (6,6)}`—intersect **all 52 horizontal and diagonal winning lines** on the 8 × 7 board!
+### 2. Static Coverage: The 27-Pair Decomposition, The 10-Cell Core & The "Central Wall" Book Proof
+Statically, partitioning 54 of the 55 empty cells into **27 pairs** while leaving `(4, 6)` unassigned (`white_27pair_struct`) satisfies complete 76-line coverage (`opening_27pair_line_cover`). Even better, the **Central 2-Column Wall (`Col 3` Even + `Col 4` Odd)** explains *why* in 4 elementary steps without enumerating a single line (`book_step1`..`book_step4`, `book_central_wall_decomposition`):
+
+| Line Type (76 Total) | Count | Elementary "Book Proof" Reason Why It Is Blocked (Zero Enumeration) | Rocq 9.1 Theorem (`C5CertChecker.v`) |
+| :--- | :---: | :--- | :--- |
+| **Vertical Lines** | **24** | Every 5-row window in `0..6` (`r0 ∈ {0,1,2}`) contains either `{1, 2}` or `{3, 4}`. | [`book_step1_vertical_middle_two_dominoes`](C5CertChecker.v#L574) |
+| **Horizontal Lines** | **28** | Every 5-col window crosses `Col 3` (owns all **even** rows `{0,2,4,6}`) & `Col 4` (owns all **odd** rows `{1,3,5}`). | [`book_step3_horizontal_parity_split`](C5CertChecker.v#L597) |
+| **In-Phase Diagonals** | **12** | Crosses `Col 3` at an **even** row and `Col 4` at an **odd** row → **double-blocked** at the Central Wall (`W₇`). | [`book_step4_diagonal_parity_alternation`](C5CertChecker.v#L611) |
+| **Out-of-Phase Diagonals** | **12** | Crosses `Col 3` at **odd** and `Col 4` at **even** → every even column (`Col 2`, `Col 6`) has an **even** row, hitting `{2, 4, 6}`. | [`book_central_wall_decomposition`](C5CertChecker.v#L657) |
 
 <p align="center">
   <img src="assets/board_structure.svg" alt="Classic Connect-Four Board: 27-Pair Symmetric First-Player Defense" width="95%"/>
 </p>
 
-### 3. Dynamic Gravity Resolution: Rule R3 Frozen-Threat Parity Restoration (`r3_frozen_column_restores_even_parity`)
+### 3. Dynamic Gravity Resolution: Rule R3 Frozen-Threat Parity Restoration (`r3_frozen_column_restores_even_parity` & `book_step5_r3_parity_law_lia`)
 Under dynamic vertical gravity, an unprotected dead cell `(4, 6)` could be played by the attacker once `(4, 0)..(4, 5)` are filled, inverting the parity of the remaining 48 empty cells. In [`C5Rules.v`](C5Rules.v) (`s_frozen = Some (fc, ft)`) and [`solver/rules.h`](solver/rules.h), **Rule R3** resolves this dynamically:
 - When the defender holds a 4-in-a-row threat at an **odd row `ft ∈ {1, 3, 5}`** in column `fc`, the even cell `(fc, ft - 1)` below it is **poisoned** (if the attacker plays `(fc, ft - 1)`, the defender immediately wins at `(fc, ft)` on the next ply).
-- This freezes the **`7 - (ft - 1) ∈ {3, 5, 7}` cells** (an **odd** number of cells!) from `(fc, ft - 1)` to `(fc, 6)`.
-- Subtracting an **odd** number of frozen cells from the **odd** total empty cells `E` restores **even** parity (`odd − odd = even`) in `freezone b st` (`r3_frozen_column_restores_even_parity`)!
+- This freezes the **`7 - (ft - 1) = 8 - ft ∈ {3, 5, 7}` cells** (an **odd** number of cells!) from `(fc, ft - 1)` to `(fc, 6)`.
+- Subtracting an **odd** number of frozen cells from the **odd** total empty cells `E` restores **even** parity (`(2k + 1) - (8 - (2j + 1)) = 2(k + j - 3)`) in `freezone b st` (`r3_frozen_column_restores_even_parity` and `book_step5_r3_parity_law_lia`)!
 
 ---
 
-## 📜 Formal Verification Structure & 12 Machine-Checked Theorems (Rocq 9.1)
+## 📜 Formal Verification Structure & 18 Machine-Checked Theorems (Rocq 9.1)
 
 All theories are written in pure constructive Rocq 9.1 without axioms:
 
@@ -162,11 +164,11 @@ Connect5_8x7/
 ├── C5Principle.v      # Follow-up principle via well-founded induction on empty cells
 ├── C5Rules.v          # Deductive soundness of Allis pairing structures (structure_sound)
 ├── C5Certificate.v    # Strategy trees, minimax duality, mutual safety draw theorem
-├── C5CertChecker.v    # Verified reflection checker + 5 concrete structural/parity theorems
-└── CheckAssumptions.v # Assumption inspection script verifying all 12 theorems have 0 axioms
+├── C5CertChecker.v    # Verified reflection checker + 11 structural, parity & Book Proof theorems
+└── CheckAssumptions.v # Assumption inspection script verifying all 18 theorems have 0 axioms
 ```
 
-### All 12 Machine-Checked Theorems Verified by [`CheckAssumptions.v`](CheckAssumptions.v)
+### All 18 Machine-Checked Theorems Verified by [`CheckAssumptions.v`](CheckAssumptions.v)
 
 | # | Theorem Identifier | File | Formal Statement Verified (`Closed under the global context`) |
 | :-: | :--- | :--- | :--- |
@@ -182,24 +184,28 @@ Connect5_8x7/
 | **10** | [`core10_covers_all_76_lines`](C5CertChecker.v#L511) | `C5CertChecker.v` | `check_cover White b_open white_core10_struct = true` (10-Cell Core covers all 52 non-vertical lines) |
 | **11** | [`dead_cell_4_6_six_lines_double_blocked`](C5CertChecker.v#L527) | `C5CertChecker.v` | `length lines_through_4_6 = 6 /\ forallb (...) lines_through_4_6 = true` (≥ 2 Red cells per line) |
 | **12** | [`r3_frozen_column_restores_even_parity`](C5CertChecker.v#L542) | `C5CertChecker.v` | `forallb (fun E => forallb (fun ft => Nat.even (E - (7 - (ft - 1)))) [1; 3; 5]) [7..55] = true` |
+| **13** | [`book_step1_vertical_middle_two_dominoes`](C5CertChecker.v#L574) | `C5CertChecker.v` | `forall r0, r0 <= 2 -> (r0 <= 1 /\ 2 <= r0 + 4) \/ (r0 <= 3 /\ 4 <= r0 + 4)` (Pure `lia`) |
+| **14** | [`book_step2_central_wall_pigeonhole`](C5CertChecker.v#L585) | `C5CertChecker.v` | `forall c0, c0 <= 3 -> (c0 <= 3 <= c0+4) /\ (c0 <= 4 <= c0+4) /\ (2 or 6 in [c0,c0+4])` (Pure `lia`) |
+| **15** | [`book_step3_horizontal_parity_split`](C5CertChecker.v#L597) | `C5CertChecker.v` | `forall c0 r, c0 <= 3 -> r <= 6 -> r in {0,2,4,6} (Col 3) \/ r in {1,3,5} (Col 4)` (Pure `lia`) |
+| **16** | [`book_step4_diagonal_parity_alternation`](C5CertChecker.v#L611) | `C5CertChecker.v` | Every upward/downward diagonal is double-blocked at `{Col 3, Col 4}` or hits `{2,4,6}` in `Col 2/6` (`lia`) |
+| **17** | [`book_central_wall_decomposition`](C5CertChecker.v#L657) | `C5CertChecker.v` | `central_wall_7cells` blocks 40 of 52 non-vertical lines; `wing_even_6cells` blocks the remaining 12 |
+| **18** | [`book_step5_r3_parity_law_lia`](C5CertChecker.v#L672) | `C5CertChecker.v` | `forall k j, (2*k + 1) - (8 - (2*j + 1)) = 2 * (k + j - 3)` (Universal Rule R3 parity via `lia`) |
 
 ### Zero Axioms Verified (`CheckAssumptions.v`)
-Running `powershell -ExecutionPolicy Bypass -File .\build.ps1` compiles all 6 proof files and verifies that all **12 theorems** depend on **zero axioms**:
+Running `powershell -ExecutionPolicy Bypass -File .\build.ps1` compiles all 6 proof files and verifies that all **18 theorems** depend on **zero axioms**:
 ```text
 Compiling CheckAssumptions.v...
-Closed under the global context  (x12 — all 12 theorems verified with 0 axioms!)
- OK (1.68s)
+Closed under the global context  (x18 — all 18 theorems verified with 0 axioms!)
+ OK (2.24s)
 ```
 
 ---
 
-## 💎 Analytic Hand-Proof Formalization & 12 Constructive Theorems (Lean 4.35.0)
+## 💎 Analytic Hand-Proof Formalization & 14 Constructive Theorems (Lean 4.35.0)
 
-In [`lean4/Connect5HandProof.lean`](lean4/Connect5HandProof.lean) (companion to **[Follow-Up Paper II](HILBERT_ERDOS_PEN_AND_PAPER_PROOF.md)**), we formalize the **Hilbert–Zermelo–Erdős pen-and-paper proof** in **Lean 4.35.0** (`leanprover/lean4:v4.35.0`).
+In [`lean4/Connect5HandProof.lean`](lean4/Connect5HandProof.lean) (companion to **[Follow-Up Paper II](HILBERT_ERDOS_PEN_AND_PAPER_PROOF.md)**), we also formalize the **Hilbert–Zermelo–Erdős & Central Wall pen-and-paper proof** in **Lean 4.35.0** (`leanprover/lean4:v4.35.0`) over affine line equations on `ℤ` (`rowAt r4 s c = r4 + s * (c - 4)`)—with **zero `sorry`s, zero custom axioms, and zero uses of `Classical.choice`**!
 
-Whereas [`C5CertChecker.v`](C5CertChecker.v) in Rocq 9.1 verifies the 76 winning lines by enumerating `all_lines` and evaluating `check_cover` via `vm_compute`, our Lean 4 development states the theorems **analytically over affine line equations on `ℤ`** (`rowAt r4 s c = r4 + s * (c - 4)`) and proves them using the exact Pigeonhole and Modulo-2 Parity steps of a human pen-and-paper proof—with **zero `sorry`s, zero custom axioms, and zero uses of `Classical.choice`**!
-
-### All 12 Constructive Hand-Proof Theorems in [`lean4/Connect5HandProof.lean`](lean4/Connect5HandProof.lean)
+### All 14 Constructive Hand-Proof Theorems in [`lean4/Connect5HandProof.lean`](lean4/Connect5HandProof.lean)
 
 | # | Lean 4 Theorem Identifier | Corresponding Hand-Proof Step (Paper II) | `#print axioms` Output |
 | :-: | :--- | :--- | :---: |
@@ -215,6 +221,8 @@ Whereas [`C5CertChecker.v`](C5CertChecker.v) in Rocq 9.1 verifies the 76 winning
 | **10** | [`allis_followup_induction`](lean4/Connect5HandProof.lean#L354) | Inductive Follow-Up Principle over remaining empty cells `E : Nat` | `[propext, Quot.sound]` |
 | **11** | [`horizontal_5col_pair_transversal`](lean4/Connect5HandProof.lean#L368) | Every 5-column horizontal window `[c0, c0+4]` contains `{1,2}` or `{5,6}` | `[propext, Quot.sound]` |
 | **12** | [`black_odd_row_transversal_hand_proof`](lean4/Connect5HandProof.lean#L381) | Player 2 (Black) odd-row transversal covers all 24 diagonals & odd horizontals | `[propext, Quot.sound]` |
+| **13** | [`book_step3_central_wall_blocks_all_horizontals`](lean4/Connect5HandProof.lean#L427) | **Central Wall Step 3:** `W₇` blocks all 28 horizontal lines (`Col 3` even / `Col 4` odd) | `[propext, Quot.sound]` |
+| **14** | [`book_step4_central_wall_diagonal_dichotomy`](lean4/Connect5HandProof.lean#L446) | **Central Wall Step 4:** Every diagonal is double-blocked at `W₇` or hits `{2,4,6}` in `Col 2/6` | `[propext, Quot.sound]` |
 
 ### Excerpt from [`lean4/Connect5HandProof.lean`](lean4/Connect5HandProof.lean#L172-L214)
 ```lean
