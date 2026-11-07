@@ -1,12 +1,13 @@
-# Formal Verification Roadmap: Solved Combinatorial Games Awaiting Machine Proof
+# Formal Verification Roadmap: Solved Combinatorial Games & Open Unsolved Frontiers
 
 [![Back to Main Repository](https://img.shields.io/badge/⬅_Back_to_Main_Landing_Page-README.md-2563eb?style=for-the-badge)](README.md)
 [![Follow-Up Paper II](https://img.shields.io/badge/📘_Paper_II-Hilbert--Erdős_Book_Proof-8b5cf6?style=for-the-badge)](HILBERT_ERDOS_PEN_AND_PAPER_PROOF.md)
 [![Appendix Note](https://img.shields.io/badge/🎲_Appendix-Classic_7x6_Connect--4-ec4899?style=for-the-badge)](APPENDIX_CLASSIC_CONNECT4_7x6.md)
+[![Theorem Provers Suite](https://img.shields.io/badge/🏛️_Theorem_Prover_Suite-Formal_Board_Games-green?style=for-the-badge)](https://github.com/TACITVS/Theorem_Prover_Formalization_of_Board_Games)
 
-> **Abstract:** Between 1980 and 2026, computer scientists and combinatorial game theorists resolved the exact game-theoretic values of over a dozen classic board games. However, virtually **every single one of these historic solutions relies on unverified C/C++ code, ad-hoc retrograde databases, or proprietary mainframe scripts**. None of them had been formally mechanized inside interactive theorem provers (Rocq/Coq, Lean 4, or Isabelle/HOL).
+> **Abstract:** Between 1980 and 2026, computer scientists and combinatorial game theorists resolved the exact game-theoretic values of over a dozen classic board games. However, virtually **every single one of these historic solutions relies on unverified C/C++ code, ad-hoc retrograde databases, or proprietary mainframe scripts**.
 >
-> Following our complete machine-checked formal proof of **8x7 Connect-5 (`game_value = Draw`)**, this document provides a comprehensive scientific catalog and execution roadmap of famous solved board games awaiting zero-axiom deductive formalization.
+> Following our complete machine-checked formal proof of **8x7 Connect-5 (`game_value = Draw`)** and **Nine Men's Morris (`game_value = Draw`)**, this document provides a comprehensive scientific catalog and execution roadmap of both **famous solved board games awaiting machine proof** and **unsolved classic games whose game-theoretic fairness is unknown**.
 
 ---
 
@@ -14,7 +15,7 @@
 
 | Board Game | Dimensions / State Space | Game-Theoretic Value | Original Computational Solver | Formal Theorem Prover Status | Core Mathematical Structure |
 | :--- | :---: | :---: | :--- | :---: | :--- |
-| **Nine Men's Morris (Mill)** | 24 points (10^10 states) | **Exact Draw** | Ralph Gasser (1993, ETH Zurich) | ❌ **Unverified** | 3-Phase DAG Retrograde Induction, D4 Dihedral Symmetry |
+| **Nine Men's Morris (Mill)** | 24 points (10^10 states) | **Exact Draw** | Ralph Gasser (1993, ETH Zurich) | ✅ **VERIFIED (Rocq 9.1 & Lean 4)** | 3-Phase DAG, D4 Dihedral Symmetry, 8-Stone Transversal Barrier |
 | **Classic Connect-Four** | 7x6 grid (4.53 x 10^12) | **Win White (P1)** | Allen (1988), Allis (1988), Tromp (1995) | ❌ **Unverified** | Claimeven (57/69 lines), Center Column 3 Pigeonhole, Odd-Threat Zugzwang |
 | **Even-Height Connect-Four** | 6x6, 8x6, 8x8 | **Win Black (P2)** | John Tromp (1995–2015) | ❌ **Unverified** | Parity Inversion, Strong Domino Traps, Zugzwang Exploitation |
 | **Qubic (3D Connect-Four)** | 4x4x4 (10^13 states) | **Win White (P1)** | Patashnik (1980), Allis (1994) | ❌ **Unverified** | 64-Bit Exact Hardware Saturation, 76 Winning Lines, VCF/VCT Search |
@@ -27,43 +28,21 @@
 
 ---
 
-## 2. In-Depth Analysis by Game Category
+## 2. Unsolved Frontiers: Games Whose Fairness Is Mathematically Unknown
 
-### Category A: Connection & Gravity Games (Direct Extension of Our Repository)
-1. **Classic Connect-Four (7x6, k = 4):**
-   - *State Space:* 4,531,985,219,092 positions (100 times smaller than 8x7 Connect-5).
-   - *Bitboard:* 7 columns of 7 bits (6 active + 1 sentinel) = 49 bits, fitting within a single `uint64_t`.
-   - *Book Proof:* As proved in our Appendix ([`APPENDIX_CLASSIC_CONNECT4_7x6.md`](APPENDIX_CLASSIC_CONNECT4_7x6.md)), pure Claimeven double-blocks 57 of the 69 winning lines (82.6%) at Move 0, while the single center column c = 3 crosses all 12 remaining horizontal lines!
-2. **Even-Height Connect-Four (6x6 and 8x6):**
-   - Proves John Tromp's counterintuitive theorem: when column height is even, the **second player wins** because Player 1 is forced to move first into the bottom cell of an even-length column, surrendering the upper response cell to Player 2 across the entire board.
-3. **Qubic (4x4x4 3D Connect-Four):**
-   - Exactly 64 board cells (zero wasted bits in a 64-bit word) and exactly 76 winning lines (the exact same number of lines as 8x7 Connect-5).
-   - Solved by Oren Patashnik (1980) on Bell Labs mainframes using 1,500 hours; re-solved by Victor Allis (1994) using Threat-Space Search.
-
-### Category B: Classical Antiquity & Symmetry-Rich Board Games
-1. **Nine Men's Morris (Mill / Merels):**
-   - One of the oldest board games in human history, dating back to at least 1400 BC (carved into the roof of the temple at Kurna, Egypt).
-   - Solved as an **Exact Draw** by Ralph Gasser (1993, ETH Zurich) under Juerg Nievergelt.
-   - 24 vertices and 16 mills. State space is approximately 10^10 positions, partitioned into 3 distinct phases: Placement (18 plies), Movement, and Flying.
-   - 24 vertices fit into 24-bit bitboards (48 bits for both players in a single 64-bit integer), with D4 dihedral symmetry reduction (8-fold).
-2. **Pentago (6x6 with 4 Rotating Quadrants):**
-   - Invented in 2004 by Tomas Floden; solved as a First-Player Win in 2014 by Geoffrey Irving using Cray supercomputers (3.0 x 10^15 states reduced to 4.0 x 10^9 symmetric states).
-   - After each stone placement, the player rotates one of the four 3x3 sub-grids 90 degrees clockwise or counterclockwise.
-3. **Quarto:**
-   - 16 distinct pieces characterized by 4 binary properties: (tall/short, red/blue, square/circular, hollow/solid).
-   - The unique twist: the moving player chooses which piece the *opponent* must place on the board.
-   - Solved as an Exact Draw by Luc Goossens (1998).
-
-### Category C: Combinatorial Game Theory & Poset Games
-1. **Chomp:**
-   - John Nash's classic Strategy-Stealing argument proves that Player 1 must have a winning first move, but the proof is completely non-constructive (it does not tell you which square of chocolate to eat!).
-   - Explicit winning strategies are only known for 2xn, 3xn, and nxn boards.
-2. **Domineering:**
-   - Invented by Goeran Andersson and featured by John Horton Conway in *On Numbers and Games* (1976) and Berlekamp, Conway, and Guy in *Winning Ways for your Mathematical Plays* (1982).
-   - Evaluates directly to Conway numbers (+1, -1/2, *).
+| Game Frontier | Dimensions / Complexity | Suspected / Conjectured Value | Core Unsolved Mathematical Question |
+| :--- | :---: | :---: | :--- |
+| **Twelve Men's Morris** | 24 points, 20 mills (4 diagonals), 12 stones | **UNKNOWN (Draw vs. Win White)** | Does adding 4 diagonal corner mills destroy the 8-stone transversal barrier and allow White to force a win? |
+| **Dots and Boxes (5x5 Dots)** | 16 Boxes, 40 Edges | **Conjectured Exact Draw (8–8)** | Famous Conway/Berlekamp open problem: even box parity permits an 8–8 draw, but optimal strategy is unproven. |
+| **Connect-5 Critical Threshold** | 8x8 and 9x7 with gravity | **UNKNOWN (Draw vs. Win White)** | At what exact grid size (w, h) does gravity Connect-5 transition from a Claimeven Draw to a First-Player Win? |
+| **Connect6 Critical Threshold** | 7x7, 8x8, 9x9 grids | **UNKNOWN Boundary** | Designed by I-Chen Wu (2005) for fairness; the critical board size where first-mover advantage forces a win is open. |
+| **Russian Checkers (Shashki)** | 8x8, flying kings, backward captures | **Conjectured Exact Draw** | English draughts is solved (Draw); Russian checkers with flying kings has never been computationally exhausted. |
 
 ---
 
-## 3. Next Project: Nine Men's Morris (Mill)
+## 3. Active Next Project: Twelve Men's Morris
 
-We select **Nine Men's Morris** as our immediate next formal verification project. Its complete 3-phase lifecycle, 24-point topology, and 16-mill structure make it the ideal bridge between pure pen-and-paper algebra and formal retrograde certificate verification.
+We select **Twelve Men's Morris** as our immediate next formal investigation. It directly extends our 24-point concentric graph from Nine Men's Morris by adding:
+1. **4 Diagonal Mills:** Across the 4 corners: NW (0, 8, 16), NE (2, 10, 18), SE (4, 12, 20), SW (6, 14, 22), bringing total mills from 16 to 20.
+2. **12 Stones Per Player:** In Phase 1, 24 plies are played, allowing the board to become completely saturated (24/24 points occupied).
+3. **Broken Regularity:** Corner mill degrees increase to 3, while midpoints remain 2, testing whether White can force a win or Black can maintain a draw barrier.
