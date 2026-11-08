@@ -5,8 +5,8 @@
 ### **Analytic Modulo-2 Hypergraph Transversals, Gravitational Induction, and Foundations Across Common Lisp (ACL2), Haskell, Rocq 9.1, and Lean 4**
 
 [![Back to Main Repository](https://img.shields.io/badge/⬅_Back_to_Main_Landing_Page-README.md-2563eb?style=for-the-badge)](README.md)
-[![Rocq 9.1 Verified](https://img.shields.io/badge/Rocq_9.1-22_Theorems_Verified_(0_Axioms)-16a34a?style=for-the-badge&logo=coq)](CheckAssumptions.v)
-[![Lean 4.35.0 Verified](https://img.shields.io/badge/Lean_4.35.0-14_Analytic_Hand--Proof_Theorems_(0_Sorrys)-10b981?style=for-the-badge)](lean4/Connect5HandProof.lean)
+[![Rocq 9.1 Verified](https://img.shields.io/badge/Rocq_9.1-24_Theorems_Verified_(0_Axioms)-16a34a?style=for-the-badge&logo=coq)](CheckAssumptions.v)
+[![Lean 4.35.0 Verified](https://img.shields.io/badge/Lean_4.35.0-18_Analytic_Hand--Proof_Theorems_(0_Sorrys)-10b981?style=for-the-badge)](lean4/Connect5HandProof.lean)
 [![Technical Audit Verified](https://img.shields.io/badge/🛡️_Audit_Verified-11%2F11_GPT--6.1_Findings_Resolved-0ea5e9?style=for-the-badge)](TECHNICAL_AUDIT_RESPONSE.md)
 [![Paper II AMS PDF](https://img.shields.io/badge/📄_Download_Paper_II-AMS_Style_PDF-dc2626?style=for-the-badge)](paper/connect5_8x7_hilbert_erdos_AMS.pdf)
 [![Paper II ACS PDF](https://img.shields.io/badge/📄_Download_Paper_II-ACS_Two--Column_PDF-7c3aed?style=for-the-badge)](paper/connect5_8x7_hilbert_erdos_ACS.pdf)
@@ -155,7 +155,7 @@ While Erdős provides the static hypergraph transversal, **David Hilbert** and *
 
 Why does a complete proof of `8 × 7` Connect-5 combine our analytic Hilbert–Erdős & Central Wall theorems with Rocq `vm_compute` certificates and `df-pn` opening search? Our verification architecture consists of three distinct layers (detailed in [`TECHNICAL_AUDIT_RESPONSE.md`](TECHNICAL_AUDIT_RESPONSE.md)):
 
-1. **Layer A — Unconditional Analytic & Combinatorial Laws (Rocq Theorems `8–18` & Lean 4 Theorems `1–14`):**
+1. **Layer A — Unconditional Analytic & Combinatorial Laws (Rocq Theorems `8–18, 23–24` & Lean 4 Theorems `1–18`):**
    Proves with zero computer enumeration (`lia` / `omega`) that `C₁₀` and the Central Wall `W₇` block all 76 lines, that `(4, 6)` is double-blocked on all 6 lines through it, and that Rule R3 restores even parity (`(2k + 1) - (8 - (2j + 1)) = 2(k + j - 3)`).
 2. **Layer B — Unconditional Leaf-to-Game-Tree Soundness & Concrete Midgame Certificates (Rocq Theorems `1–3, 5–6, 19–22`):**
    - At Ply 1 (`b_open`, `55` empty cells), only 1 stone is on the board, so no 4-stone frozen threat exists yet (`s_frozen = None` requires even empty cells, and an unassigned cell cannot be left in an unfrozen `Static` structure because the attacker could use it as a tempo-burning pass move once Column 4 fills to row 5).

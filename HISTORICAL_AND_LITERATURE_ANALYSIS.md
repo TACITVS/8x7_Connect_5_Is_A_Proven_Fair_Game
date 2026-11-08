@@ -5,7 +5,8 @@
 ### **A Rigorous Audit of Classical AI Folklore vs. Machine-Checked Mathematical Novelty**
 
 [![Back to Main Repository](https://img.shields.io/badge/⬅_Back_to_Main_Landing_Page-README.md-2563eb?style=for-the-badge)](README.md)
-[![Formal Proof](https://img.shields.io/badge/Rocq_9.1-12_Theorems_Closed_Under_Global_Context-10b981?style=for-the-badge)](CheckAssumptions.v)
+[![Formal Proof](https://img.shields.io/badge/Rocq_9.1-24_Theorems_Closed_Under_Global_Context-10b981?style=for-the-badge)](CheckAssumptions.v)
+[![Lean 4.35.0 Verified](https://img.shields.io/badge/Lean_4.35.0-18_Hand--Proof_Theorems_(0_Sorrys)-16a34a?style=for-the-badge)](lean4/Connect5HandProof.lean)
 [![Paper I AMS](https://img.shields.io/badge/Paper_I_(Rocq_%26_CUDA)-AMS_PDF-dc2626?style=for-the-badge)](paper/connect5_8x7_fairness_AMS.pdf)
 [![Paper II Hilbert-Erdos](https://img.shields.io/badge/📖_Follow--Up_Paper_II-Hilbert--Erdős_Pen--and--Paper_%26_Lisp-8b5cf6?style=for-the-badge)](HILBERT_ERDOS_PEN_AND_PAPER_PROOF.md)
 
@@ -277,12 +278,12 @@ Moving *beyond* standard Rocq 9.1 reveals a fascinating duality: some stronger t
 
 ## ✅ 9. Index of Machine-Checked Theorems Backing Every Claim
 
-Every mathematical, structural, and game-theoretic claim in this repository is backed by a machine-checked theorem compiled by **Rocq 9.1** (`rocq compile`) and verified by [`CheckAssumptions.v`](CheckAssumptions.v) to print `Closed under the global context` (**0 axioms, 0 admits**):
+Every mathematical, structural, and game-theoretic claim in this repository is backed by **24 machine-checked theorems** compiled by **Rocq 9.1** (`rocq compile`) and verified by [`CheckAssumptions.v`](CheckAssumptions.v) to print `Closed under the global context` (**0 axioms, 0 admits**), complemented by **18 constructive hand-proof theorems** in **Lean 4.35.0** ([`lean4/Connect5HandProof.lean`](lean4/Connect5HandProof.lean), **0 `sorry`s, 0 custom axioms, 0 `Classical.choice`**):
 
 | # | Theorem Name | Source File & Line | Mathematical Statement Proven in Rocq 9.1 | Verification Method |
 | :-: | :--- | :--- | :--- | :---: |
 | **1** | [`structure_sound`](C5Rules.v#L898) | [`C5Rules.v:898`](C5Rules.v#L898) | `∀ d b st, Static d b st → safe d b (other d)` (Deductive soundness of Allis's strong dominoes, rigid chains, weak units, and Rule R3 frozen threats). | Well-founded induction on `empties b` (`follow_up`) |
-| **2** | [`strategy_sound`](C5Certificate.v#L71) | [`C5Certificate.v:71`](C5Certificate.v#L71) | `∀ d b s t, valid_strategy d b s t = true → safe d b s` (Soundness of explicit inductive strategy trees). | Structural induction on `strategy` |
+| **2** | [`strategy_sound`](C5Certificate.v#L71) | [`C5Certificate.v:71`](C5Certificate.v#L71) | `∀ d b s, strategy d b s → safe d b s` (Soundness of explicit inductive strategy trees). | Structural induction on `strategy` |
 | **3** | [`mutual_safety_draw`](C5Certificate.v#L211) | [`C5Certificate.v:211`](C5Certificate.v#L211) | `∀ c0, legal initial c0 = true → safe White (play initial c0 White) Black → safe Black initial White → game_value = Draw`. | Constructive minimax evaluation (`eval_fuel_safe`) |
 | **4** | [`connect5_8x7_fair`](C5Certificate.v#L230) | [`C5Certificate.v:230`](C5Certificate.v#L230) | Master theorem reducing `game_value = Draw` to valid White and Black strategy certificates. | Direct corollary of `mutual_safety_draw` |
 | **5** | [`check_static_sound`](C5CertChecker.v#L181) | [`C5CertChecker.v:181`](C5CertChecker.v#L181) | `∀ d b st, check_static d b st = true → Static d b st` (Boolean reflection soundness for Allis structures). | Boolean reflection & list deciders |
@@ -293,6 +294,18 @@ Every mathematical, structural, and game-theoretic claim in this repository is b
 | **10** | [`core10_covers_all_76_lines`](C5CertChecker.v#L511) | [`C5CertChecker.v:511`](C5CertChecker.v#L511) | `check_cover White b_open white_core10_struct = true` (10-Cell Core in Cols `2, 3, 4, 6` covers all 52 non-vertical winning lines). | `vm_compute; reflexivity` |
 | **11** | [`dead_cell_4_6_six_lines_double_blocked`](C5CertChecker.v#L527) | [`C5CertChecker.v:527`](C5CertChecker.v#L527) | `length lines_through_4_6 = 6` and every one of the 6 lines through `(4,6)` contains `≥ 2` guaranteed White cells. | `vm_compute; reflexivity` |
 | **12** | [`r3_frozen_column_restores_even_parity`](C5CertChecker.v#L542) | [`C5CertChecker.v:542`](C5CertChecker.v#L542) | For every odd empty count `E ∈ {7..55}` and odd threat row `ft ∈ {1, 3, 5}`, `Nat.even (E - (7 - (ft - 1))) = true`. | `vm_compute; reflexivity` |
+| **13** | [`book_step1_vertical_middle_two_dominoes`](C5CertChecker.v#L574) | [`C5CertChecker.v:574`](C5CertChecker.v#L574) | Every 5-row vertical window `[r0, r0+4]` in `0..6` contains `{1, 2}` or `{3, 4}`. | Presburger `lia` |
+| **14** | [`book_step2_central_wall_pigeonhole`](C5CertChecker.v#L585) | [`C5CertChecker.v:585`](C5CertChecker.v#L585) | Every 5-column window `[c0, c0+4]` crosses `Col 3`, `Col 4`, and at least one of `{Col 2, Col 6}`. | Presburger `lia` |
+| **15** | [`book_step3_horizontal_parity_split`](C5CertChecker.v#L597) | [`C5CertChecker.v:597`](C5CertChecker.v#L597) | Every row `r ≤ 6` is either even `{0,2,4,6}` (blocked at `Col 3`) or odd `{1,3,5}` (blocked at `Col 4`). | Presburger `lia` |
+| **16** | [`book_step4_diagonal_parity_alternation`](C5CertChecker.v#L611) | [`C5CertChecker.v:611`](C5CertChecker.v#L611) | Every diagonal is double-blocked at `{Col 3, Col 4}` or hits an even row `{2,4,6}` in `Col 2` or `Col 6`. | Presburger `lia` |
+| **17** | [`book_central_wall_decomposition`](C5CertChecker.v#L657) | [`C5CertChecker.v:657`](C5CertChecker.v#L657) | `central_wall_7cells` blocks `40/52` non-vertical lines; `wing_even_6cells` blocks the remaining `12`. | `vm_compute; reflexivity` |
+| **18** | [`book_step5_r3_parity_law_lia`](C5CertChecker.v#L672) | [`C5CertChecker.v:672`](C5CertChecker.v#L672) | Universal Rule-R3 parity law `(2*k + 1) - (8 - (2*j + 1)) = 2 * (k + j - 3)`. | Presburger `lia` |
+| **19** | [`r3_concrete_check_static_true`](C5CertChecker.v#L748) | [`C5CertChecker.v:748`](C5CertChecker.v#L748) | `empties b_r3 = 47 ∧ check_static White b_r3 white_r3_full_struct = true ∧ check_cert_node = true`. | `vm_compute; reflexivity` |
+| **20** | [`r3_concrete_Static`](C5CertChecker.v#L755) | [`C5CertChecker.v:755`](C5CertChecker.v#L755) | `Static White b_r3 white_r3_full_struct` on reachable 47-empty Rule-R3 midgame board. | `check_static_sound` |
+| **21** | [`r3_concrete_cert_safe`](C5CertChecker.v#L763) | [`C5CertChecker.v:763`](C5CertChecker.v#L763) | `safe White b_r3 Black ∧ safe White b_ply8 White` (Unconditional safety across `8^47` continuations). | `structure_sound` + `cert_sound` |
+| **22** | [`r2_concrete_black_static_safe`](C5CertChecker.v#L812) | [`C5CertChecker.v:812`](C5CertChecker.v#L812) | `empties b_r2 = 36 ∧ check_static Black ... = true ∧ Static ... ∧ safe Black b_r2 White`. | `vm_compute` + `structure_sound` |
+| **23** | [`c4_7x6_claimeven_57_of_69_and_center3_cover`](C5CertChecker.v#L859) | [`C5CertChecker.v:859`](C5CertChecker.v#L859) | Classic `7 × 6` Connect-Four: `O_21` blocks `57/69` lines (`45/45` V/D double-blocked), `E_center ∪ O_21` covers `69/69`. | `vm_compute; reflexivity` |
+| **24** | [`c4_7x6_book_theorems_lia`](C5CertChecker.v#L875) | [`C5CertChecker.v:875`](C5CertChecker.v#L875) | Classic `7 × 6` Connect-Four book theorems: vertical double-block, Center-3 Pigeonhole, Odd-Threat Zugzwang. | Presburger `lia` |
 
 ---
 

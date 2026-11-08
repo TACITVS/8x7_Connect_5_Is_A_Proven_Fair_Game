@@ -29,3 +29,5 @@ scratch/
 
 # Lean 4 / Lake build artifacts
 lean4/.lake/
+
+.worktrees/
